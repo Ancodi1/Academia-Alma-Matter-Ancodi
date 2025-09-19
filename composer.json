@@ -1,0 +1,63 @@
+{
+    "name": "academia/alma-mater",
+    "description": "Sistema de gestión académica completo desarrollado en PHP con MySQL",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Academia Alma Mater",
+            "email": "contacto@academia-alma-mater.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0",
+        "phpstan/phpstan": "^1.0",
+        "squizlabs/php_codesniffer": "^3.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Academia\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Academia\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-html coverage",
+        "cs-check": "phpcs --standard=PSR12 src/",
+        "cs-fix": "phpcbf --standard=PSR12 src/",
+        "stan": "phpstan analyse src/",
+        "quality": [
+            "@cs-check",
+            "@stan",
+            "@test"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "keywords": [
+        "academia",
+        "gestion",
+        "alumnos",
+        "examenes",
+        "asignaturas",
+        "php",
+        "mysql",
+        "educacion"
+    ],
+    "homepage": "https://github.com/tu-usuario/academia-alma-mater",
+    "support": {
+        "issues": "https://github.com/tu-usuario/academia-alma-mater/issues",
+        "source": "https://github.com/tu-usuario/academia-alma-mater"
+    }
+}

@@ -1,0 +1,57 @@
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+
+# Archivos de configuración local
+.env
+config.local.php
+
+# Logs
+*.log
+logs/
+error.log
+
+# Archivos de backup
+*.bak
+*.backup
+backup/
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Archivos de PHP
+composer.phar
+vendor/
+
+# Archivos de cache
+cache/
+tmp/
+
+# Archivos de sesión
+sessions/
+
+# Archivos de uploads (si se añaden en el futuro)
+uploads/
+files/
+
+# Archivos de configuración de servidor
+.htaccess.local
+nginx.conf.local
+
+# Archivos de base de datos local
+*.sql.local
+database.local.sql
+
+# Archivos de testing
+tests/
+phpunit.xml
+.phpunit.result.cache
+
+# Archivos de documentación generada
+docs/build/

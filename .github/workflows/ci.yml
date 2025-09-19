@@ -1,0 +1,102 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        php-version: [7.4, 8.0, 8.1, 8.2]
+        mysql-version: [5.7, 8.0]
+    
+    services:
+      mysql:
+        image: mysql:${{ matrix.mysql-version }}
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: almamater
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        extensions: mysqli, pdo_mysql
+        coverage: none
+    
+    - name: Install dependencies
+      run: |
+        composer install --no-dev --optimize-autoloader
+    
+    - name: Wait for MySQL
+      run: |
+        while ! mysqladmin ping -h"127.0.0.1" -P3306 -uroot -proot --silent; do
+          sleep 1
+        done
+    
+    - name: Setup database
+      run: |
+        mysql -h 127.0.0.1 -P 3306 -u root -proot almamater < almamater.sql
+        mysql -h 127.0.0.1 -P 3306 -u root -proot almamater < optimizaciones.sql
+    
+    - name: Run syntax check
+      run: |
+        find . -name "*.php" -not -path "./vendor/*" -exec php -l {} \;
+    
+    - name: Run basic tests
+      run: |
+        php -f index.php
+        php -f editorAlumnos.php
+        php -f gestionAsignaturas.php
+    
+    - name: Check for security issues
+      run: |
+        # Basic security checks
+        grep -r "mysql_query\|mysqli_query" . --include="*.php" || true
+        grep -r "eval(" . --include="*.php" || true
+        grep -r "exec(" . --include="*.php" || true
+
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Run security scan
+      uses: github/super-linter@v4
+      env:
+        DEFAULT_BRANCH: main
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        VALIDATE_PHP: true
+        VALIDATE_HTML: true
+        VALIDATE_CSS: true
+        VALIDATE_JAVASCRIPT: true
+
+  deploy:
+    needs: [test, security]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Create deployment package
+      run: |
+        zip -r academia-alma-mater.zip . -x "*.git*" "*.github*" "*.md" "*.sql" "tests/*" "cache/*" "logs/*"
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: academia-alma-mater
+        path: academia-alma-mater.zip
