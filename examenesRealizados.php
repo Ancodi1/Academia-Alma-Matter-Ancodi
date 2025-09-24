@@ -1,5 +1,7 @@
 <?php
 require("views/cabecera.php");
+require_once(__DIR__ . '/models/session.php');
+authorizeRoles(['admin','profesor']);
 require_once("controllers/AlumnoController.php");
 
 $alumnoController = new AlumnoController();
@@ -19,7 +21,11 @@ $examenes = $alumnoController->getExamenesPorAlumno($idAlumno);
 		if ($_GET['error'] === 'examen_eliminar') echo '<div class="aviso error">No se pudo eliminar el examen.</div>';
 	}
 	?>
-	<table>
+    <form method="POST" action="controllers/accionesExamenesExport.php" style="margin: 10px 0;">
+        <input type="hidden" name="idAlumno" value="<?php echo $idAlumno; ?>">
+        <button type="submit" name="exportarExamenesCSV">Exportar exámenes (CSV)</button>
+    </form>
+    <table>
 		<tr>
 			<td id="filaAlumnos">Asignatura</td>
 			<td id="filaAlumnos">Fecha</td>

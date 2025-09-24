@@ -1,5 +1,7 @@
 <?php
 require("views/cabecera.php");
+require_once(__DIR__ . "/models/session.php");
+authorizeRoles(['admin','profesor']);
 require_once("controllers/AlumnoController.php");
 
 $alumnoController = new AlumnoController();

@@ -45,6 +45,7 @@ define('SMTP_USERNAME', '');
 define('SMTP_PASSWORD', '');
 define('SMTP_FROM_EMAIL', '');
 define('SMTP_FROM_NAME', 'Academia Alma Mater');
+define('NOTIFY_TO_EMAIL', ''); // Email destino para notificaciones (dejar vacío para desactivar)
 
 // Configuración de archivos
 define('UPLOAD_MAX_SIZE', 5242880); // 5MB en bytes
@@ -59,10 +60,12 @@ define('CACHE_DIR', 'cache/');
 define('BACKUP_ENABLED', false);
 define('BACKUP_DIR', 'backups/');
 define('BACKUP_RETENTION_DAYS', 30);
+define('BACKUP_MYSQLDUMP_PATH', 'mysqldump'); // Ruta al binario (p.ej. C:\\xampp\\mysql\\bin\\mysqldump.exe en Windows)
 
 // Configuración de idioma
 define('DEFAULT_LANGUAGE', 'es');
 define('SUPPORTED_LANGUAGES', ['es', 'en']);
+define('API_TOKEN', 'cambia-esto-por-un-token-seguro');
 
 // Configuración de zona horaria
 date_default_timezone_set('Europe/Madrid');

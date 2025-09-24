@@ -7,7 +7,11 @@
 		<title>Academia Alma Mater </title>
 	</head>
 	<body>
-        <?php require_once("views/cabecera.php"); ?>
+    <?php 
+        require_once("views/cabecera.php");
+        require_once(__DIR__ . '/models/session.php');
+        requireLogin();
+    ?>
 		<!--Divisor del Contenido-->
 		<div id="contenido">
 		 <h1>Bienvenido a Alma Mater </h1>

@@ -13,6 +13,23 @@ class AlumnoController {
         return $this->conexion->realizarConsultaSQL($sql);
     }
 
+    public function exportarAlumnosCSV() {
+        $stmt = $this->conexion->preparar("SELECT id, nombre, apellidos, edad FROM Alumno ORDER BY nombre ASC");
+        if (!$stmt) return false;
+        $stmt->execute();
+        $result = $stmt->get_result();
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=alumnos.csv');
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['ID', 'Nombre', 'Apellidos', 'Edad']);
+        while ($row = $result->fetch_assoc()) {
+            fputcsv($output, [$row['id'], $row['nombre'], $row['apellidos'], $row['edad']]);
+        }
+        fclose($output);
+        $stmt->close();
+        return true;
+    }
+
     public function buscarAlumnos($termino = '', $pagina = 1, $porPagina = 10) {
         $offset = ($pagina - 1) * $porPagina;
         
@@ -76,6 +93,29 @@ class AlumnoController {
         $result = $stmt->get_result();
         $stmt->close();
         return $result;
+    }
+
+    public function exportarExamenesAlumnoCSV($idAlumno) {
+        $stmt = $this->conexion->preparar("SELECT a.nombre AS asignatura, e.fecha, e.nota
+                FROM Examen e
+                LEFT JOIN Asignatura a ON a.id = e.idAsignatura
+                WHERE e.idAlumno = ?
+                ORDER BY e.fecha DESC, e.idAsignatura DESC");
+        if (!$stmt) return false;
+        $idInt = intval($idAlumno);
+        $stmt->bind_param("i", $idInt);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=examenes_alumno_' . $idInt . '.csv');
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['Asignatura', 'Fecha', 'Nota']);
+        while ($row = $result->fetch_assoc()) {
+            fputcsv($output, [$row['asignatura'], $row['fecha'], $row['nota']]);
+        }
+        fclose($output);
+        $stmt->close();
+        return true;
     }
 
     public function actualizarExamen($idAlumno, $idAsignatura, $fechaOriginal, $nuevaFecha, $nuevaNota) {

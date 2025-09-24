@@ -14,7 +14,8 @@
 			<?php $logoVersion = @filemtime($_SERVER['DOCUMENT_ROOT'] . '/academia/img/logo.png') ?: time(); ?>
 			<a href="/academia/index.php"><img src="/academia/img/logo.png?v=<?php echo $logoVersion; ?>" alt="Academia Alma Mater"></a>
 		</div>
-		<div id="menu">
+        <?php require_once(__DIR__ . '/models/session.php'); requireLogin(); ?>
+        <div id="menu">
 		<a href="/academia/index.php">Inicio</a>
 		<a href="/academia/gestionAlumnos.php">Gestión Alumnos </a>
 		<a href="/academia/gestionAsignaturas.php">Gestión Asignaturas </a>

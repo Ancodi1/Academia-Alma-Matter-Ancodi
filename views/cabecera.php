@@ -10,6 +10,10 @@
 </head>
 <body>
     <!--Divisor de la cabezera -->
+    <?php 
+        // Mostrar estado de sesión
+        require_once(__DIR__ . '/../models/session.php'); 
+    ?>
     <div id="cabecera">
 		<div id="logo">
             <?php $logoVersion = @filemtime($_SERVER['DOCUMENT_ROOT'] . '/academia/img/logo.png') ?: time(); ?>
@@ -17,8 +21,15 @@
         </div>
         <div id="menu">
 			<a href="/academia/index.php">Inicio</a>
+            <a href="/academia/dashboard.php">Dashboard</a>
 			<a href="/academia/gestionAlumnos.php">Gestión Alumnos</a>
 			<a href="/academia/gestionAsignaturas.php">Gestión Asignaturas</a>
+            <?php if (isAuthenticated()): ?>
+                <span style="margin-left:10px;">Hola, <?php echo htmlspecialchars(currentUserName()); ?> (<?php echo htmlspecialchars(currentUserRole()); ?>)</span>
+                <a href="/academia/logout.php" style="margin-left:10px;">Salir</a>
+            <?php else: ?>
+                <a href="/academia/login.php" style="margin-left:10px;">Entrar</a>
+            <?php endif; ?>
         </div>
     </div>
 </body>

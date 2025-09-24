@@ -1,5 +1,6 @@
 <?php
 require_once(__DIR__ . "/AlumnoController.php");
+require_once(__DIR__ . '/../models/mail.php');
 
 $alumnoController = new AlumnoController();
 
@@ -25,6 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if ($idAlumno && $idAsignatura && $fecha !== null && $nota !== null) {
         if ($alumnoController->ponerNotaExamen($idAsignatura, $idAlumno, $fecha, $nota)) {
+            notifyEvent('Nuevo examen creado', "Alumno ID: {$idAlumno}\nAsignatura ID: {$idAsignatura}\nFecha: {$fecha}\nNota: {$nota}");
             header("Location: ../editorAlumnos.php?mensaje=examen_creado");
             exit;
         } else {

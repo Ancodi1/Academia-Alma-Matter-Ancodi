@@ -50,6 +50,18 @@ function mostrarBotonEliminarAlumno($id)
             <a href="editorAlumnos.php" style="margin-left: 10px;">Limpiar</a>
         <?php endif; ?>
     </form>
+
+    <!-- Exportación CSV -->
+    <form method="POST" action="controllers/accionesAlumno.php" style="margin: 10px 0;">
+        <input type="hidden" name="csrf_token" value="<?php echo generarTokenCSRF(); ?>">
+        <button type="submit" name="exportarAlumnosCSV">Exportar alumnos (CSV)</button>
+    </form>
+
+    <!-- Versión imprimible (PDF desde navegador) -->
+    <form method="GET" action="imprimir_alumnos.php" style="margin: 10px 0;">
+        <input type="hidden" name="buscar" value="<?php echo htmlspecialchars($termino); ?>">
+        <button type="submit">Versión imprimible (PDF)</button>
+    </form>
     
     <?php
 	if (isset($_GET["mensaje"])) {

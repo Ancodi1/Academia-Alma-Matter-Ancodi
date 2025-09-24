@@ -1,6 +1,7 @@
 <?php
 require_once(__DIR__ . "/AlumnoController.php");
 require_once(__DIR__ . "/../models/csrf.php");
+require_once(__DIR__ . "/../models/session.php");
 
 $alumnoController = new AlumnoController();
 
@@ -14,6 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id = $_POST['id'];
     
     if (isset($_POST['modificarAlumno'])) {
+        authorizeRoles(['admin','profesor']);
         $nombre = isset($_POST['nombre']) ? trim($_POST['nombre']) : '';
         $apellidos = isset($_POST['apellidos']) ? trim($_POST['apellidos']) : '';
         $edad = isset($_POST['edad']) ? trim($_POST['edad']) : '';
@@ -37,6 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     if (isset($_POST['eliminarAlumno'])) {
+        authorizeRoles(['admin']);
         if ($alumnoController->eliminarAlumno($id)) {
             header("Location: ../editorAlumnos.php?mensaje=eliminado");
             exit;
@@ -47,14 +50,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     if (isset($_POST['realizarExamen'])) {
+        authorizeRoles(['admin','profesor']);
         // Redirigir a página de exámenes (por implementar)
         header("Location: ../realizarExamen.php?id=" . $id);
         exit;
     }
     
     if (isset($_POST['verExamenesAlumno'])) {
+        authorizeRoles(['admin','profesor']);
         // Redirigir a página de exámenes realizados (por implementar)
         header("Location: ../examenesRealizados.php?id=" . $id);
+        exit;
+    }
+
+    if (isset($_POST['exportarAlumnosCSV'])) {
+        authorizeRoles(['admin','profesor']);
+        // Exportación de alumnos en CSV
+        $alumnoController->exportarAlumnosCSV();
         exit;
     }
     
