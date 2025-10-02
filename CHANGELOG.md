@@ -5,6 +5,67 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-01-15
+
+### ✨ Añadido
+- **Sistema de Calendario Académico**: Gestión completa de eventos con colores personalizables
+- **Control de Asistencia**: Sistema masivo por asignatura y fecha con estados (presente, falta, justificada, tardanza)
+- **Gestión de Trabajos y Proyectos**: CRUD completo con estados, fechas de entrega y calificaciones
+- **Sistema de Comunicados**: Avisos con fecha de expiración y destinatarios específicos
+- **Historial Académico**: Registro detallado de evaluaciones con gráficos y estadísticas
+- **Sistema de Notificaciones**: Notificaciones en tiempo real con API REST
+- **Recuperación de Contraseña**: Sistema completo por email con tokens seguros
+- **Sistema de Roles**: Autenticación basada en roles (admin/profesor/alumno)
+- **Tema Oscuro/Claro**: Interfaz con modo oscuro y persistencia de preferencias
+- **Exportación/Importación CSV**: Para alumnos y asignaturas con validación
+- **Gráficos Interactivos**: Chart.js para visualización de datos académicos
+- **API REST**: Endpoints para notificaciones y gestión de datos
+
+### 🎨 Mejoras de UI/UX
+- **Diseño Responsive**: Adaptación completa para móviles y tablets
+- **Selectores de Fecha/Hora**: Mini-calendario y selector de tiempo separado
+- **Navegación Mejorada**: Breadcrumbs y menú contextual
+- **Indicadores Visuales**: Estados de carga, confirmaciones y feedback
+- **Accesibilidad**: Focus visible, contraste mejorado y navegación por teclado
+- **Tema Personalizable**: Variables CSS para fácil personalización
+
+### 🔧 Mejoras Técnicas
+- **Protección CSRF**: Tokens en todos los formularios
+- **Rate Limiting**: Protección contra ataques de fuerza bruta
+- **Prepared Statements**: Seguridad SQL mejorada
+- **Validación de Datos**: Validación robusta en servidor y cliente
+- **Manejo de Errores**: Logging mejorado y mensajes de error informativos
+- **Optimización de Consultas**: Índices específicos para nuevas funcionalidades
+
+### 🗄️ Base de Datos
+- **Nuevas Tablas**: CalendarioAcademico, Asistencia, Trabajo, Comunicado, HistorialAcademico
+- **Tabla de Usuarios**: Sistema completo de autenticación con roles
+- **Sistema de Recuperación**: Tabla PasswordReset para tokens seguros
+- **Índices Optimizados**: Para consultas frecuentes y mejor rendimiento
+- **Foreign Keys**: Integridad referencial mejorada
+
+### 🔒 Seguridad
+- **Autenticación Basada en Roles**: Control de acceso granular
+- **Hash Seguro de Contraseñas**: Algoritmo bcrypt
+- **Validación de Entrada**: Sanitización y validación de todos los datos
+- **Protección XSS**: Escape de salida en todas las vistas
+- **Tokens CSRF**: Protección contra ataques cross-site
+- **Rate Limiting**: Protección contra ataques automatizados
+
+### 📊 Rendimiento
+- **Índices Específicos**: Para nuevas consultas de gestión académica
+- **Paginación Optimizada**: En todos los listados
+- **Caché de Consultas**: Para datos frecuentemente accedidos
+- **Optimización de Assets**: CSS y JS minificados
+- **Lazy Loading**: Para componentes pesados
+
+### 📚 Documentación
+- **README Actualizado**: Instrucciones completas de instalación
+- **CREDENCIALES_ADMIN.md**: Información de acceso por defecto
+- **Changelog Detallado**: Seguimiento completo de cambios
+- **Comentarios en Código**: Documentación inline mejorada
+- **Guías de Uso**: Para nuevas funcionalidades
+
 ## [1.0.0] - 2024-12-19
 
 ### ✨ Añadido
