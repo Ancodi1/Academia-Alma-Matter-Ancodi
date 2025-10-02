@@ -2,6 +2,8 @@
 require("views/cabecera.php");
 require_once("controllers/AlumnoController.php");
 require_once("models/csrf.php");
+require_once("models/session.php");
+authorizeRoles(['admin','profesor']);
 
 $alumnoController = new AlumnoController();
 
@@ -55,6 +57,13 @@ function mostrarBotonEliminarAlumno($id)
     <form method="POST" action="controllers/accionesAlumno.php" style="margin: 10px 0;">
         <input type="hidden" name="csrf_token" value="<?php echo generarTokenCSRF(); ?>">
         <button type="submit" name="exportarAlumnosCSV">Exportar alumnos (CSV)</button>
+    </form>
+
+    <!-- Importación CSV -->
+    <form method="POST" action="controllers/accionesAlumno.php" enctype="multipart/form-data" style="margin: 10px 0;">
+        <input type="hidden" name="csrf_token" value="<?php echo generarTokenCSRF(); ?>">
+        <input type="file" name="archivo_csv" accept=".csv" required>
+        <button type="submit" name="importarAlumnosCSV">Importar alumnos (CSV)</button>
     </form>
 
     <!-- Versión imprimible (PDF desde navegador) -->

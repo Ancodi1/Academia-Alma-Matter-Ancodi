@@ -11,6 +11,7 @@
         require_once("views/cabecera.php");
         require_once(__DIR__ . '/models/session.php');
         requireLogin();
+        authorizeRoles(['admin','profesor']);
     ?>
 		<!--Divisor del Contenido-->
 		<div id="contenido">

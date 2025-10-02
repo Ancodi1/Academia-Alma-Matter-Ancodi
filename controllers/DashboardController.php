@@ -47,6 +47,27 @@ class DashboardController {
         $aprobados = intval($res['aprobados'] ?? 0);
         return round(($aprobados / $total) * 100.0, 2);
     }
+
+    public function getPromedioPorAsignatura(): array {
+        $sql = 'SELECT a.nombre AS asignatura, AVG(e.nota) AS promedio
+                FROM Examen e
+                JOIN Asignatura a ON a.id = e.idAsignatura
+                GROUP BY a.nombre
+                ORDER BY a.nombre ASC';
+        $stmt = $this->db->preparar($sql);
+        if (!$stmt) return [];
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = [
+                'asignatura' => (string)$row['asignatura'],
+                'promedio' => round((float)$row['promedio'], 2),
+            ];
+        }
+        $stmt->close();
+        return $data;
+    }
 }
 ?>
 

@@ -25,7 +25,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Usuario y contraseña son obligatorios.';
         } else {
             $auth = new AuthService();
-            $user = $auth->findUserByUsername($username);
+            // Permitir login por email o usuario
+            if (strpos($username, '@') !== false) {
+                $user = $auth->findUserByEmail($username);
+            } else {
+                $user = $auth->findUserByUsername($username);
+            }
             if ($user && $auth->verifyPassword($password, $user['password_hash'])) {
                 loginUser((int)$user['id'], (string)$user['nombre'], (string)$user['rol']);
                 header('Location: ' . $redirect);
@@ -51,6 +56,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php if ($error): ?>
                 <div class="aviso error"><?php echo htmlspecialchars($error); ?></div>
             <?php endif; ?>
+            <?php if (isset($_GET['mensaje']) && $_GET['mensaje'] === 'reset_enviado'): ?>
+                <div class="aviso exito">Si el correo existe, hemos enviado instrucciones.</div>
+            <?php endif; ?>
+            <?php if (isset($_GET['mensaje']) && $_GET['mensaje'] === 'pass_actualizada'): ?>
+                <div class="aviso exito">Contraseña actualizada. Ya puedes iniciar sesión.</div>
+            <?php endif; ?>
             <form method="POST" action="">
                 <input type="hidden" name="csrf_token" value="<?php echo generarTokenCSRF(); ?>">
                 <div style="margin-bottom:12px;">
@@ -62,6 +73,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="password" name="password">
                 </div>
                 <button type="submit">Entrar</button>
+            </form>
+            <hr style="margin:20px 0;">
+            <form method="POST" action="/academia/controllers/password_reset.php">
+                <input type="hidden" name="csrf_token" value="<?php echo generarTokenCSRF(); ?>">
+                <input type="hidden" name="action" value="request">
+                <div style="margin-bottom:12px;">
+                    <label>¿Olvidaste tu contraseña? Escribe tu email</label><br>
+                    <input type="email" name="email" required>
+                </div>
+                <button type="submit">Enviar enlace de restablecimiento</button>
             </form>
         </div>
     </body>

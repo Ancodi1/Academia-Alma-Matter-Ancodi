@@ -14,7 +14,7 @@
 			<?php $logoVersion = @filemtime($_SERVER['DOCUMENT_ROOT'] . '/academia/img/logo.png') ?: time(); ?>
 			<a href="/academia/index.php"><img src="/academia/img/logo.png?v=<?php echo $logoVersion; ?>" alt="Academia Alma Mater"></a>
 		</div>
-        <?php require_once(__DIR__ . '/models/session.php'); requireLogin(); ?>
+        <?php require_once(__DIR__ . '/models/session.php'); requireLogin(); authorizeRoles(['admin','profesor']); ?>
         <div id="menu">
 		<a href="/academia/index.php">Inicio</a>
 		<a href="/academia/gestionAlumnos.php">Gestión Alumnos </a>
@@ -36,6 +36,13 @@
 				<input type="submit" onclick="return enviarFormulario()" 
 				value="Dar Alta de Nueva Asignatura">
 				<div id="error" style="color: red; margin-top: 10px;"></div>
+			</form>
+
+			<!-- Exportación CSV de Asignaturas -->
+			<?php require_once("models/csrf.php"); ?>
+			<form method="POST" action="controllers/accionesAsignatura.php" style="margin-top:20px;">
+				<input type="hidden" name="csrf_token" value="<?php echo generarTokenCSRF(); ?>">
+				<button type="submit" name="exportarAsignaturasCSV">Exportar asignaturas (CSV)</button>
 			</form>
 		</div>
 		

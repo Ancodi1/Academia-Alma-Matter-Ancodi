@@ -1,57 +1,35 @@
-# Archivos del sistema
-.DS_Store
-Thumbs.db
+# Archivos de configuración local
+config.php
+
+# Archivos temporales
 *.tmp
 *.temp
-
-# Archivos de configuración local
-.env
-config.local.php
-
-# Logs
 *.log
-logs/
-error.log
 
 # Archivos de backup
 *.bak
 *.backup
-backup/
 
 # Archivos de IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
 
-# Archivos de PHP
-composer.phar
-vendor/
+# Archivos del sistema
+.DS_Store
+Thumbs.db
 
-# Archivos de cache
-cache/
-tmp/
+# Archivos de prueba
+pruebas/
+test/
 
-# Archivos de sesión
-sessions/
+# Archivos CSV de ejemplo (opcional, comentar si quieres incluirlos)
+# *.csv
 
-# Archivos de uploads (si se añaden en el futuro)
-uploads/
-files/
+# Archivos de sesión PHP
+sess_*
 
-# Archivos de configuración de servidor
-.htaccess.local
-nginx.conf.local
-
-# Archivos de base de datos local
-*.sql.local
-database.local.sql
-
-# Archivos de testing
-tests/
-phpunit.xml
-.phpunit.result.cache
-
-# Archivos de documentación generada
-docs/build/
+# Archivos de error de PHP
+error_log
+php_errors.log
