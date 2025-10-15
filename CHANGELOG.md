@@ -5,7 +5,7 @@ Todos los cambios notables de este proyecto serán documentados en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0] - 2025-01-15
+## [1.1.0] - 2025-10-15
 
 ### ✨ Añadido
 - **Sistema de Calendario Académico**: Gestión completa de eventos con colores personalizables
@@ -36,17 +36,24 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.h
 - **Validación de Datos**: Validación robusta en servidor y cliente
 - **Manejo de Errores**: Logging mejorado y mensajes de error informativos
 - **Optimización de Consultas**: Índices específicos para nuevas funcionalidades
+ - **i18n selector**: Selector de idioma persistente (ES/EN)
+ - **Dashboard**: Nueva serie “Exámenes por mes (12)”
+ - **Exportaciones**: CSV en asistencia/historial y vistas imprimibles (PDF naveg.)
+ - **API**: Header `X-CSRF-Token` requerido en `api/notifications.php`
+ - **Minificación y caché**: `academia.min.css` y `js/asignaturas.min.js` + cache busting
 
 ### 🗄️ Base de Datos
 - **Nuevas Tablas**: CalendarioAcademico, Asistencia, Trabajo, Comunicado, HistorialAcademico
 - **Tabla de Usuarios**: Sistema completo de autenticación con roles
 - **Sistema de Recuperación**: Tabla PasswordReset para tokens seguros
 - **Índices Optimizados**: Para consultas frecuentes y mejor rendimiento
+   - `Asistencia (fecha, id_asignatura)`
+   - `HistorialAcademico (id_alumno, id_asignatura, periodo)`
 - **Foreign Keys**: Integridad referencial mejorada
 
 ### 🔒 Seguridad
 - **Autenticación Basada en Roles**: Control de acceso granular
-- **Hash Seguro de Contraseñas**: Algoritmo bcrypt
+- **Hash Seguro de Contraseñas**: Argon2id (fallback bcrypt)
 - **Validación de Entrada**: Sanitización y validación de todos los datos
 - **Protección XSS**: Escape de salida en todas las vistas
 - **Tokens CSRF**: Protección contra ataques cross-site
