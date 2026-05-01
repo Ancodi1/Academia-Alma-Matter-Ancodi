@@ -9,7 +9,7 @@ class AlumnoController {
     }
     
     public function getTodosLosAlumnos() {
-        $sql = "SELECT id, nombre, apellidos, edad FROM Alumno ORDER BY nombre ASC";
+        $sql = "SELECT id, nombre, apellidos, edad, email FROM Alumno ORDER BY nombre ASC";
         return $this->conexion->realizarConsultaSQL($sql);
     }
 
@@ -17,12 +17,12 @@ class AlumnoController {
         $offset = ($pagina - 1) * $porPagina;
         
         if ($termino) {
-            $stmt = $this->conexion->preparar("SELECT id, nombre, apellidos, edad FROM Alumno WHERE nombre LIKE ? OR apellidos LIKE ? ORDER BY nombre ASC LIMIT ? OFFSET ?");
+            $stmt = $this->conexion->preparar("SELECT id, nombre, apellidos, edad, email FROM Alumno WHERE nombre LIKE ? OR apellidos LIKE ? ORDER BY nombre ASC LIMIT ? OFFSET ?");
             if (!$stmt) return false;
             $terminoLike = "%$termino%";
             $stmt->bind_param("ssii", $terminoLike, $terminoLike, $porPagina, $offset);
         } else {
-            $stmt = $this->conexion->preparar("SELECT id, nombre, apellidos, edad FROM Alumno ORDER BY nombre ASC LIMIT ? OFFSET ?");
+            $stmt = $this->conexion->preparar("SELECT id, nombre, apellidos, edad, email FROM Alumno ORDER BY nombre ASC LIMIT ? OFFSET ?");
             if (!$stmt) return false;
             $stmt->bind_param("ii", $porPagina, $offset);
         }
@@ -101,12 +101,12 @@ class AlumnoController {
         return $ok;
     }
     
-    public function modificarAlumno($id, $nombre, $apellidos, $edad) {
-        $stmt = $this->conexion->preparar("UPDATE Alumno SET nombre = ?, apellidos = ?, edad = ? WHERE id = ?");
+    public function modificarAlumno($id, $nombre, $apellidos, $edad, $email = null) {
+        $stmt = $this->conexion->preparar("UPDATE Alumno SET nombre = ?, apellidos = ?, edad = ?, email = ? WHERE id = ?");
         if (!$stmt) return false;
         $idInt = intval($id);
         $edadInt = intval($edad);
-        $stmt->bind_param("ssii", $nombre, $apellidos, $edadInt, $idInt);
+        $stmt->bind_param("ssisi", $nombre, $apellidos, $edadInt, $email, $idInt);
         $ok = $stmt->execute();
         $stmt->close();
         return $ok;
@@ -122,14 +122,15 @@ class AlumnoController {
         return $ok;
     }
     
-    public function agregarAlumno($nombre, $apellidos, $edad) {
-        $stmt = $this->conexion->preparar("INSERT INTO Alumno (nombre, apellidos, edad) VALUES (?, ?, ?)");
+    public function agregarAlumno($nombre, $apellidos, $edad, $email = null) {
+        $stmt = $this->conexion->preparar("INSERT INTO Alumno (nombre, apellidos, edad, email) VALUES (?, ?, ?, ?)");
         if (!$stmt) return false;
         $edadInt = intval($edad);
-        $stmt->bind_param("ssi", $nombre, $apellidos, $edadInt);
+        $stmt->bind_param("ssis", $nombre, $apellidos, $edadInt, $email);
         $ok = $stmt->execute();
+        $id = $this->conexion->conexion->insert_id;
         $stmt->close();
-        return $ok;
+        return $ok ? $id : false;
     }
 
     public function ponerNotaExamen($idAsignatura, $idAlumno, $fecha, $nota) {

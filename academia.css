@@ -1,9 +1,37 @@
+/* Variables de tema */
+:root {
+    --bg-color: #f6f8fb;
+    --text-color: #1f2937;
+    --card-bg: #ffffff;
+    --border-color: #e5e7eb;
+    --primary-color: #0b66c3;
+    --success-color: #16a34a;
+    --danger-color: #ef4444;
+    --hover-bg: #e5eefc;
+    --table-header-bg: #f9fafb;
+    --shadow: rgba(0, 0, 0, 0.06);
+}
+
+body.dark {
+    --bg-color: #1f2937;
+    --text-color: #f9fafb;
+    --card-bg: #374151;
+    --border-color: #4b5563;
+    --primary-color: #3b82f6;
+    --success-color: #10b981;
+    --danger-color: #f87171;
+    --hover-bg: #4b5563;
+    --table-header-bg: #4b5563;
+    --shadow: rgba(0, 0, 0, 0.3);
+}
+
 /* Base */
 body {
-    background-color: #f6f8fb;
+    background-color: var(--bg-color);
     margin: 0;
     font-family: 'Actor', Arial, sans-serif;
-    color: #1f2937;
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #cabecera, #contenido, #piePagina {
@@ -38,8 +66,8 @@ body {
 }
 
 #menu a:hover {
-    background: #e5eefc;
-    color: #0b66c3;
+    background: var(--hover-bg);
+    color: var(--primary-color);
 }
 
 /* Tamaño del logo en cabecera*/
@@ -95,13 +123,13 @@ td { text-align: center; padding: 12px 10px; border-bottom: 1px solid #eef2f7; }
 
 tr:nth-child(even) td { background: #fafcff; }
 
-#filaAlumnos { font-weight: 600; background: #eef5ff; color: #0f172a; border-bottom: none; }
+#filaAlumnos { font-weight: 600; background: var(--table-header-bg); color: var(--text-color); border-bottom: none; }
 
 /* Botones de acción en tablas */
 td button { margin: 0 4px; }
-.btn-editar { background: #0b66c3; }
-.btn-guardar { background: #16a34a; }
-.btn-cancelar { background: #ef4444; }
+.btn-editar { background: var(--primary-color); }
+.btn-guardar { background: var(--success-color); }
+.btn-cancelar { background: var(--danger-color); }
 .btn-editar i, .btn-guardar i, .btn-cancelar i { pointer-events: none; }
 .btn-editar:hover { background: #0957a7; }
 .btn-guardar:hover { background: #15803d; }
@@ -260,9 +288,18 @@ button:active, input[type="submit"]:active { transform: translateY(1px); }
 }
 
 /* Accesibilidad */
-button:focus, input:focus, select:focus {
-    outline: 2px solid #0b66c3;
-    outline-offset: 2px;
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: #0b66c3;
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    z-index: 100;
+}
+.skip-link:focus {
+    top: 6px;
 }
 
 /* Responsive */
@@ -270,6 +307,10 @@ button:focus, input:focus, select:focus {
     #logo { width: 100%; float: none; text-align: center; }
     #menu { width: 100%; float: none; text-align: center; margin-top: 10px; }
     #contenido { padding: 0 10px; }
+    .opcionGestion { width: 100%; margin-bottom: 20px; }
+    table { font-size: 14px; }
+    td, th { padding: 8px 4px; }
+}
     table { font-size: 14px; }
     .toast { right: 10px; left: 10px; transform: translateY(-100px); }
     .toast.show { transform: translateY(0); }

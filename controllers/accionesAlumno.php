@@ -17,8 +17,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $nombre = isset($_POST['nombre']) ? trim($_POST['nombre']) : '';
         $apellidos = isset($_POST['apellidos']) ? trim($_POST['apellidos']) : '';
         $edad = isset($_POST['edad']) ? trim($_POST['edad']) : '';
+        $email = isset($_POST['email']) ? trim($_POST['email']) : '';
 
-        if ($nombre === '' || $apellidos === '' || $edad === '') {
+        if ($nombre === '' || $apellidos === '' || $edad === '' || $email === '') {
             header("Location: ../editorAlumnos.php?error=validacion_campos");
             exit;
         }
@@ -26,8 +27,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: ../editorAlumnos.php?error=edad_invalida");
             exit;
         }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            header("Location: ../editorAlumnos.php?error=email_invalido");
+            exit;
+        }
 
-        if ($alumnoController->modificarAlumno($id, $nombre, $apellidos, $edad)) {
+        if ($alumnoController->modificarAlumno($id, $nombre, $apellidos, $edad, $email)) {
             header("Location: ../editorAlumnos.php?mensaje=modificado");
             exit;
         } else {

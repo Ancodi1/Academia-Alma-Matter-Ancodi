@@ -32,7 +32,7 @@ $asignaturas = $alumnoController->getTodasLasAsignaturas();
 	</form>
 </div>
 <?php require("views/pieDePagina.php"); ?>
-<script src="/academia/js/asignaturas.js"></script>
+<script src="/js/asignaturas.js"></script>
 </html>
 
 

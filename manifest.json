@@ -1,0 +1,16 @@
+{
+  "name": "Academia Alma Mater",
+  "short_name": "Alma Mater",
+  "description": "Sistema de gestión académica",
+  "start_url": "/index.php",
+  "display": "standalone",
+  "background_color": "#f6f8fb",
+  "theme_color": "#0b66c3",
+  "icons": [
+    {
+      "src": "/img/logo.png",
+      "sizes": "120x120",
+      "type": "image/png"
+    }
+  ]
+}

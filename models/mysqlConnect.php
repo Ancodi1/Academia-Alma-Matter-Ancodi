@@ -8,11 +8,10 @@
 
             //Constructor por defecto
         public function __construct(){
-            //datos de acceso por defecto en phpmyadmin
-            $this->server = "localhost";
-            $this->user = "root";
-            $this->password = "";
-            $this->database = "almamater";
+            $this->server = getenv('DB_HOST') !== false ? getenv('DB_HOST') : 'localhost';
+            $this->user = getenv('DB_USER') !== false ? getenv('DB_USER') : 'root';
+            $this->password = getenv('DB_PASSWORD') !== false ? getenv('DB_PASSWORD') : '';
+            $this->database = getenv('DB_NAME') !== false ? getenv('DB_NAME') : 'almamater';
             $this->msqli = new mysqli($this->server, $this->user, $this->password, $this->database);
             
             if ($this->msqli->connect_error) {

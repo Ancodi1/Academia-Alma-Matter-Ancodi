@@ -45,10 +45,10 @@ $examenes = $alumnoController->getExamenesPorAlumno($idAlumno);
 			</form>
 		<?php } ?>
 	</table>
-	<p style="margin-top:20px;"><a href="/academia/editorAlumnos.php">Volver</a></p>
+	<p style="margin-top:20px;"><a href="/editorAlumnos.php">Volver</a></p>
 </div>
 <?php require("views/pieDePagina.php"); ?>
-<script src="/academia/js/asignaturas.js"></script>
+<script src="/js/asignaturas.js"></script>
 </html>
 <script>
 document.addEventListener('DOMContentLoaded', function(){

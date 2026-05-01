@@ -25,6 +25,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if ($idAlumno && $idAsignatura && $fecha !== null && $nota !== null) {
         if ($alumnoController->ponerNotaExamen($idAsignatura, $idAlumno, $fecha, $nota)) {
+            // Enviar email de notificación
+            $alumno = $alumnoController->conexion->realizarConsultaSQL("SELECT nombre, apellidos, email FROM Alumno WHERE id = $idAlumno")->fetch_assoc();
+            if ($alumno && $alumno['email']) {
+                require_once(__DIR__ . "/../models/mail.php");
+                $subject = "Nueva nota registrada";
+                $body = "Hola {$alumno['nombre']} {$alumno['apellidos']},<br>Se ha registrado una nueva nota: $nota en la fecha $fecha.";
+                enviarEmail($alumno['email'], $subject, $body);
+            }
             header("Location: ../editorAlumnos.php?mensaje=examen_creado");
             exit;
         } else {

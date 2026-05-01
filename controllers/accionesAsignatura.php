@@ -1,29 +1,48 @@
 <?php
 
 require_once("AsignaturaController.php");
+require_once(__DIR__ . "/../models/csrf.php");
 
-if (isset($_POST)) {
-    // Recuperamos los datos del formulario para gestionar la Asignatura
-    if (isset($_POST["nombre"]))
-        $nombre = $_POST["nombre"];
-    if (isset($_POST["curso"]))
-        $curso = $_POST["curso"];
-    if (isset($_POST["id"]))
-        $id = $_POST["id"];
+$asignaturaController = new AsignaturaController();
 
-    //Accedemos al Controladcor
-    $asignaturaControlador = new AsignaturaController();
-    //var_dump($_POST);
-    // Si quiere dar de alta una asignatura nueva
-    if (isset($_POST["nuevaAsignatura"])) {
-        $asignaturaControlador->insertarAsignatura($nombre, $curso);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Validar CSRF
+    if (!isset($_POST['csrf_token']) || !validarTokenCSRF($_POST['csrf_token'])) {
+        header("Location: ../editorAsignaturas.php?error=csrf");
+        exit;
     }
-    // Si quiere modificar una asignatura
+    
+    $id = $_POST['id'];
+    
     if (isset($_POST["modificarAsignatura"])) {
-        $asignaturaControlador->modificarAsignatura($id, $nombre, $curso);
+        $nombre = isset($_POST["nombre"]) ? trim($_POST["nombre"]) : '';
+        $curso = isset($_POST["curso"]) ? trim($_POST["curso"]) : '';
+
+        if ($nombre === '' || $curso === '') {
+            header("Location: ../editorAsignaturas.php?error=validacion_campos");
+            exit;
+        }
+
+        if ($asignaturaController->modificarAsignatura($id, $nombre, $curso)) {
+            header("Location: ../editorAsignaturas.php?mensaje=modificado");
+            exit;
+        } else {
+            header("Location: ../editorAsignaturas.php?error=modificar");
+            exit;
+        }
     }
-    // Si quiere eliminar una asignatura
+    
     if (isset($_POST["eliminarAsignatura"])) {
-        $asignaturaControlador->borrarAsignatura($id);
+        if ($asignaturaController->borrarAsignatura($id)) {
+            header("Location: ../editorAsignaturas.php?mensaje=eliminado");
+            exit;
+        } else {
+            header("Location: ../editorAsignaturas.php?error=eliminar");
+            exit;
+        }
     }
+    
+} else {
+    header("Location: ../editorAsignaturas.php");
+    exit;
 }

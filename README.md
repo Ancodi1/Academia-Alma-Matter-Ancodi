@@ -48,6 +48,25 @@ $this->database = "almamater";
 
 4. **Configurar servidor web**
 - Apache: Asegurar que mod_rewrite esté habilitado
+
+### Despliegue con Docker
+
+1. **Instalar Docker y Docker Compose**
+
+2. **Ejecutar el proyecto**
+```bash
+docker-compose up -d
+```
+
+3. **Acceder**
+- Aplicación: http://localhost:8080
+- Base de datos: localhost:3306 (usuario: root, password: password)
+
+### Configuración de Email
+
+1. Copiar `config.example.php` a `config.php`
+2. Configurar credenciales SMTP en `config.php`
+3. Instalar dependencias: `composer install`
 - Nginx: Configurar reglas de reescritura para URLs limpias
 
 5. **Permisos de archivos**

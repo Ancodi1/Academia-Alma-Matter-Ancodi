@@ -1,103 +1,76 @@
 <?php
 require("views/cabecera.php");
-require_once("controllers/AlumnoController.php");
+require_once("controllers/AsignaturaController.php");
 require_once("models/csrf.php");
 
-$alumnoController = new AlumnoController();
+$asignaturaController = new AsignaturaController();
 
 // Búsqueda y paginación
 $termino = isset($_GET['buscar']) ? trim($_GET['buscar']) : '';
 $pagina = isset($_GET['pagina']) ? max(1, intval($_GET['pagina'])) : 1;
 $porPagina = 5;
 
-$totalAlumnos = $alumnoController->contarAlumnos($termino);
-$totalPaginas = ceil($totalAlumnos / $porPagina);
-$alumnos = $alumnoController->buscarAlumnos($termino, $pagina, $porPagina);
+$totalAsignaturas = $asignaturaController->contarAsignaturas($termino);
+$totalPaginas = ceil($totalAsignaturas / $porPagina);
+$asignaturas = $asignaturaController->buscarAsignaturas($termino, $pagina, $porPagina);
 
-function mostrarBotonModificar($id)
+function mostrarBotonModificarAsignatura($id)
 {
     echo '<button type="button" class="btn-editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';
-    echo '<button type="submit" name="modificarAlumno" class="btn-guardar" style="display:none;" title="Guardar"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>';
+    echo '<button type="submit" name="modificarAsignatura" class="btn-guardar" style="display:none;" title="Guardar"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>';
     echo '<button type="button" class="btn-cancelar" style="display:none;" title="Cancelar"><i class="fa fa-times" aria-hidden="true"></i></button>';
 }
 
-function mostrarRealizarExamen($id)
+function mostrarBotonEliminarAsignatura($id)
 {
-    echo '<button type="submit" name="realizarExamen"><i class="fa fa-file-text-o" aria-hidden="true"></i></button>';
-}
-
-function mostrarBotonExamenesRealizados($id)
-{
-    echo '<button type="submit" name="verExamenesAlumno"><i class="fa fa-eye" aria-hidden="true"></i></button>';
-}
-
-function mostrarBotonEliminarAlumno($id)
-{
-    echo '<button type="submit" name="eliminarAlumno"><i class="fa fa-trash" aria-hidden="true"></i></button>';
+    echo '<button type="submit" name="eliminarAsignatura"><i class="fa fa-trash" aria-hidden="true"></i></button>';
 }
 
 ?>
 <!-- Divisor del Contenido -->
 <div id="contenido">
-    <h1>Gestor de Alumnos</h1>
-    <h3>Listado de Alumnos</h3>
+    <h1>Gestor de Asignaturas</h1>
+    <h3>Listado de Asignaturas</h3>
     
     <!-- Búsqueda -->
     <form method="GET" style="margin: 20px 0;">
-        <input type="text" name="buscar" placeholder="Buscar por nombre o apellidos..." value="<?php echo htmlspecialchars($termino); ?>" style="width: 300px; padding: 8px;">
+        <input type="text" name="buscar" placeholder="Buscar por nombre o curso..." value="<?php echo htmlspecialchars($termino); ?>" style="width: 300px; padding: 8px;">
         <button type="submit">Buscar</button>
         <?php if ($termino): ?>
-            <a href="editorAlumnos.php" style="margin-left: 10px;">Limpiar</a>
+            <a href="editorAsignaturas.php" style="margin-left: 10px;">Limpiar</a>
         <?php endif; ?>
     </form>
     
     <?php
 	if (isset($_GET["mensaje"])) {
-		// Para "modificado" mostraremos un modal, no un aviso en línea
-		if ($_GET["mensaje"] === "eliminado") echo '<div class="aviso exito">Alumno eliminado correctamente</div>';
+		if ($_GET["mensaje"] === "eliminado") echo '<div class="aviso exito">Asignatura eliminada correctamente</div>';
 	}
     if (isset($_GET["error"])) {
-        if ($_GET["error"] === "modificar") echo '<div class="aviso error">Error al modificar el alumno</div>';
-        if ($_GET["error"] === "eliminar") echo '<div class="aviso error">Error al eliminar el alumno</div>';
-        if ($_GET["error"] === "validacion_campos") echo '<div class="aviso error">Rellena nombre, apellidos, edad y email.</div>';
-        if ($_GET["error"] === "edad_invalida") echo '<div class="aviso error">La edad debe estar entre 1 y 120.</div>';
-        if ($_GET["error"] === "email_invalido") echo '<div class="aviso error">Email inválido.</div>';
+        if ($_GET["error"] === "modificar") echo '<div class="aviso error">Error al modificar la asignatura</div>';
+        if ($_GET["error"] === "eliminar") echo '<div class="aviso error">Error al eliminar la asignatura</div>';
+        if ($_GET["error"] === "validacion_campos") echo '<div class="aviso error">Rellena nombre y curso.</div>';
         if ($_GET["error"] === "csrf") echo '<div class="aviso error">Token de seguridad inválido. Inténtalo de nuevo.</div>';
     }
     ?>
-    <table id="tablaAlumnos">
+    <table id="tablaAsignaturas">
         <tr>
-            <td id="filaAlumnos">Nombre</td>
-            <td id="filaAlumnos">Apellidos</td>
-            <td id="filaAlumnos">Edad</td>
-            <td id="filaAlumnos">Email</td>
-            <td id="filaAlumnos">Acciones</td>
+            <td id="filaAsignaturas">Nombre</td>
+            <td id="filaAsignaturas">Curso</td>
+            <td id="filaAsignaturas">Acciones</td>
         </tr>
-            <!-- Listamos a todos los Alumnos -->
+            <!-- Listamos todas las Asignaturas -->
             <?php
-            // Leemos todos los alumnos
-            while ($alumno = $alumnos->fetch_assoc()) {
-                $idAlumno = $alumno["id"];
-                echo '<form action="controllers/accionesAlumno.php" method="post">';
+            while ($asignatura = $asignaturas->fetch_assoc()) {
+                $idAsignatura = $asignatura["id"];
+                echo '<form action="controllers/accionesAsignatura.php" method="post">';
                 echo '<tr>';
-                echo '<input type="hidden" name="id" value="' . $idAlumno . '">';
+                echo '<input type="hidden" name="id" value="' . $idAsignatura . '">';
                 echo '<input type="hidden" name="csrf_token" value="' . generarTokenCSRF() . '">';
-                echo '<td id="filaAlumnos"><input type="text" name="nombre" value="' . htmlspecialchars($alumno["nombre"]) . '" disabled></td>';
-                echo '<td id="filaAlumnos"><input type="text" name="apellidos" value="' . htmlspecialchars($alumno["apellidos"]) . '" disabled></td>';
-                echo '<td id="filaAlumnos"><input type="text" name="edad" value="' . htmlspecialchars($alumno["edad"]) . '" disabled></td>';
-                echo '<td id="filaAlumnos"><input type="email" name="email" value="' . htmlspecialchars($alumno["email"] ?? '') . '" disabled></td>';
-                // Creamos los botones para las acciones
-                echo '<td id="filaAlumnos">';
-                // Acción Modificar Alumno
-                mostrarBotonModificar($idAlumno);
-                // Acción Realizar Examen
-                mostrarRealizarExamen($idAlumno);
-                // Si tiene exámenes => los mostramos
-                $numeroExamenes = $alumnoController->getNumeroExamenes($idAlumno);
-                if ($numeroExamenes > 0)
-                    mostrarBotonExamenesRealizados($idAlumno);
-                // Acción Borrar Alumno
-                mostrarBotonEliminarAlumno($idAlumno);
+                echo '<td id="filaAsignaturas"><input type="text" name="nombre" value="' . htmlspecialchars($asignatura["nombre"]) . '" disabled></td>';
+                echo '<td id="filaAsignaturas"><input type="text" name="curso" value="' . htmlspecialchars($asignatura["curso"]) . '" disabled></td>';
+                echo '<td id="filaAsignaturas">';
+                mostrarBotonModificarAsignatura($idAsignatura);
+                mostrarBotonEliminarAsignatura($idAsignatura);
                 echo '</td></tr>';
                 echo '</form>';
             }
@@ -130,7 +103,7 @@ function mostrarBotonEliminarAlumno($id)
 <div id="modalOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
 	<div id="modalBox" style="background:#fff; padding:20px; max-width:420px; width:90%; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.25); text-align:center;">
 		<h2 style="margin-top:0;">Cambios guardados</h2>
-		<p>Los datos del alumno se han actualizado correctamente.</p>
+		<p>Los datos de la asignatura se han actualizado correctamente.</p>
 		<button id="modalAceptar" style="margin-top:12px; padding:8px 16px; cursor:pointer;">Aceptar</button>
 	</div>
 </div>
@@ -148,7 +121,6 @@ document.addEventListener('DOMContentLoaded', function(){
 	if (btn) {
 		btn.addEventListener('click', function(){
 			esconderModal();
-			// Limpiamos el query string para que no reaparezca al recargar
 			var p = new URLSearchParams(window.location.search);
 			if (p.has('mensaje')) {
 				p.delete('mensaje');
@@ -158,12 +130,10 @@ document.addEventListener('DOMContentLoaded', function(){
 		});
 	}
 
-	// Editor: activar/desactivar por fila usando delegación (robusto con tablas)
-	var tabla = document.getElementById('tablaAlumnos');
+	var tabla = document.getElementById('tablaAsignaturas');
 	if (tabla) {
 		tabla.addEventListener('click', function(e){
 			var target = e.target;
-			// Si clican el <i>, subimos al botón
 			if (target.tagName === 'I') {
 				target = target.closest('button');
 			}
@@ -171,7 +141,6 @@ document.addEventListener('DOMContentLoaded', function(){
 			var fila = target.closest('tr');
 			if (!fila) return;
 
-			// Controles de la fila
 			var btnEditar = fila.querySelector('.btn-editar');
 			var btnGuardar = fila.querySelector('.btn-guardar');
 			var btnCancelar = fila.querySelector('.btn-cancelar');
@@ -213,31 +182,6 @@ function esconderModal(){
 	if (overlay) {
 		overlay.style.display = 'none';
 	}
-}
-
-// Toast notifications
-function mostrarToast(mensaje, tipo = 'success') {
-    const toast = document.createElement('div');
-    toast.className = `toast ${tipo}`;
-    toast.textContent = mensaje;
-    document.body.appendChild(toast);
-    
-    // Usar requestAnimationFrame para mejor rendimiento
-    requestAnimationFrame(() => toast.classList.add('show'));
-    
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => {
-            if (toast.parentNode) {
-                document.body.removeChild(toast);
-            }
-        }, 300);
-    }, 3000);
-}
-
-// Mostrar toast si hay mensajes
-if (window.location.search.includes('mensaje=modificado')) {
-    mostrarToast('Alumno modificado correctamente', 'success');
 }
 </script>
 

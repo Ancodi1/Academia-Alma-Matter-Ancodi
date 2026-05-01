@@ -16,8 +16,14 @@ define('APP_NAME', 'Academia Alma Mater');
 define('APP_VERSION', '1.0.0');
 define('APP_URL', 'http://localhost/academia');
 
-// Configuración de seguridad
-define('CSRF_TOKEN_LIFETIME', 3600); // 1 hora en segundos
+// Configuración de email
+define('MAIL_HOST', 'smtp.gmail.com');
+define('MAIL_PORT', 587);
+define('MAIL_USERNAME', 'tuemail@gmail.com');
+define('MAIL_PASSWORD', 'tupassword');
+define('MAIL_ENCRYPTION', 'tls');
+define('MAIL_FROM', 'tuemail@gmail.com');
+define('MAIL_FROM_NAME', 'Academia Alma Mater');
 define('SESSION_LIFETIME', 7200); // 2 horas en segundos
 
 // Configuración de paginación

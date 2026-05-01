@@ -1,15 +1,5 @@
+<?php require_once("views/cabecera.php"); ?>
 
-
-<!DOCTYPE html>
-<html>
-	<head>
-		<link rel="stylesheet" type="text/css" href="academia.css">
-		<link href='https://fonts.googleapis.com/css?family=Actor' rel='stylesheet'>
-		<meta charset="utf-8">
-		<title>Academia Alma Mater </title>
-	</head>
-	<body>
-        <?php require_once("views/cabecera.php"); ?>
 		<!--Divisor del Contenido-->
 		<div id="contenido">
 		 <h1>Bienvenido a Alma Mater </h1>
@@ -30,7 +20,7 @@
 		 ?>
 		 
 			<form id="nuevoAlumno"
-			action="controllers/nuevoAlumno.php" method="post">
+			action="controllers/nuevoAlumno.php" method="post" enctype="multipart/form-data">
 				<label for="nombreAlumno">Nombre:</label><br>
 			<input type="text"
 			id="nombreAlumno" name="nombreAlumno"><br>
@@ -40,6 +30,12 @@
 				<label for="edadAlumno">Edad:</label><br>
 			<input type="text"
 			id="edadAlumno" name="edadAlumno"><br>
+				<label for="emailAlumno">Email:</label><br>
+			<input type="email"
+			id="emailAlumno" name="emailAlumno"><br>
+				<label for="fotoAlumno">Foto (opcional):</label><br>
+			<input type="file"
+			id="fotoAlumno" name="fotoAlumno" accept="image/*"><br>
 			<input type="submit" onclick="return enviarFormulario()" 
 			value="Dar Alta de Nuevo Alumno">
 			<div id="error" style="color: red; margin-top: 10px;"></div>
@@ -56,6 +52,8 @@
 				mensajesError.push("Falta los apellidos del alumno");
 			if(edadAlumno.value==null || edadAlumno.value=="")
 				mensajesError.push("Falta la edad del alumno");
+			if(emailAlumno.value==null || emailAlumno.value=="")
+				mensajesError.push("Falta el email del alumno");
 			
 			// Si hay errores, los mostramos y no enviamos el formulario
 			if(mensajesError.length > 0){
