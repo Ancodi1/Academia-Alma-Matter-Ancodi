@@ -7,6 +7,10 @@ class AlumnoController {
     public function __construct() {
         $this->conexion = new mysqlConn();
     }
+
+    public function getConexion() {
+        return $this->conexion;
+    }
     
     public function getTodosLosAlumnos() {
         $sql = "SELECT id, nombre, apellidos, edad, email FROM Alumno ORDER BY nombre ASC";
@@ -128,7 +132,7 @@ class AlumnoController {
         $edadInt = intval($edad);
         $stmt->bind_param("ssis", $nombre, $apellidos, $edadInt, $email);
         $ok = $stmt->execute();
-        $id = $this->conexion->conexion->insert_id;
+        $id = $this->conexion->getInsertId();
         $stmt->close();
         return $ok ? $id : false;
     }

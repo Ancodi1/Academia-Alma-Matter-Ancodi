@@ -10,7 +10,7 @@
 		<div id="opcionesGestion">
 			<div class="opcionGestion">
 				<a href="nuevoAsignatura.php">
-					<img src="img/añadirAlumno.png" alt="Añadir Asignatura" class="imagenGestion">
+					<img src="img/asignaturas.png" alt="Añadir Asignatura" class="imagenGestion">
 					<p>Añadir Asignaturas</p>
 				</a>
 			</div>

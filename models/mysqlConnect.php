@@ -37,7 +37,16 @@
 
     // Preparar una sentencia SQL de forma segura
     public function preparar($sql){
-        return $this->msqli->prepare($sql);
+        try {
+            return $this->msqli->prepare($sql);
+        } catch (mysqli_sql_exception $e) {
+            error_log("Error SQL al preparar sentencia: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getInsertId(){
+        return $this->msqli->insert_id;
     }
     
     // Cerrar conexión

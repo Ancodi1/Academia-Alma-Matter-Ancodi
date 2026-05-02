@@ -31,7 +31,7 @@ CREATE TABLE Usuario (
 );
 
 -- Insertar usuario admin por defecto (password: admin123)
-INSERT INTO Usuario (username, password, role) VALUES ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin');
+INSERT INTO Usuario (username, password, role) VALUES ('admin', '$2y$10$FNpZrTMTBkcwi5wkuRwBReYglkjU..3KQlZRB1rEqPo/IgYfNzI5y', 'admin');
 
 -- Crear tabla para archivos subidos
 CREATE TABLE Archivo (
@@ -43,3 +43,29 @@ CREATE TABLE Archivo (
     fecha_subida TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (idAlumno) REFERENCES Alumno(id) ON DELETE CASCADE
 );
+
+-- Nuevas tablas relacionadas a asistencia y horarios
+CREATE TABLE IF NOT EXISTS Horario (
+    id INT(5) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    idAsignatura INT(5) UNSIGNED NOT NULL,
+    diaSemana VARCHAR(20) NOT NULL,
+    horaInicio TIME NOT NULL,
+    horaFin TIME NOT NULL,
+    aula VARCHAR(50) NOT NULL,
+    profesor VARCHAR(255) DEFAULT NULL,
+    FOREIGN KEY (idAsignatura) REFERENCES Asignatura(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Asistencia (
+    id INT(5) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    idAlumno INT(5) UNSIGNED NOT NULL,
+    idAsignatura INT(5) UNSIGNED NOT NULL,
+    fecha DATE NOT NULL,
+    estado ENUM('Presente','Ausente','Justificada') NOT NULL DEFAULT 'Presente',
+    FOREIGN KEY (idAlumno) REFERENCES Alumno(id) ON DELETE CASCADE,
+    FOREIGN KEY (idAsignatura) REFERENCES Asignatura(id) ON DELETE CASCADE
+);
+
+-- Índices para asistencia y horarios
+ALTER TABLE Horario ADD INDEX idx_horario_asignatura (idAsignatura);
+ALTER TABLE Asistencia ADD INDEX idx_asistencia_alumno (idAlumno), ADD INDEX idx_asistencia_asignatura (idAsignatura);

@@ -71,7 +71,55 @@ INSERT INTO `Asignatura` (`id`, `nombre`, `curso`) VALUES
 (6, 'Historia', '2º Bachiller'),
 (7, 'Dibujo Técnico', '1º Bachiller'),
 (8, 'Informática', '2º Bachiller'),
-(11, 'Llingua Asturiana', '3º ESO');
+(11, 'Lingua Gallega', '3º ESO');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `Horario`
+--
+
+CREATE TABLE `Horario` (
+  `id` int(5) UNSIGNED NOT NULL,
+  `idAsignatura` int(5) UNSIGNED NOT NULL,
+  `diaSemana` varchar(20) COLLATE utf8_spanish_ci NOT NULL,
+  `horaInicio` time NOT NULL,
+  `horaFin` time NOT NULL,
+  `aula` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `profesor` varchar(255) COLLATE utf8_spanish_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `Horario`
+--
+
+INSERT INTO `Horario` (`id`, `idAsignatura`, `diaSemana`, `horaInicio`, `horaFin`, `aula`, `profesor`) VALUES
+(1, 1, 'Lunes', '09:00:00', '10:30:00', 'Aula 12', 'Ana Gómez'),
+(2, 2, 'Martes', '11:00:00', '12:30:00', 'Aula 05', 'Carlos Ruiz'),
+(3, 3, 'Miércoles', '09:00:00', '10:30:00', 'Aula 41', 'Lucía Méndez');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `Asistencia`
+--
+
+CREATE TABLE `Asistencia` (
+  `id` int(5) UNSIGNED NOT NULL,
+  `idAlumno` int(5) UNSIGNED NOT NULL,
+  `idAsignatura` int(5) UNSIGNED NOT NULL,
+  `fecha` date NOT NULL,
+  `estado` enum('Presente','Ausente','Justificada') COLLATE utf8_spanish_ci NOT NULL DEFAULT 'Presente'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `Asistencia`
+--
+
+INSERT INTO `Asistencia` (`id`, `idAlumno`, `idAsignatura`, `fecha`, `estado`) VALUES
+(1, 1, 1, '2024-05-01', 'Presente'),
+(2, 2, 2, '2024-05-01', 'Ausente'),
+(3, 3, 3, '2024-05-02', 'Justificada');
 
 -- --------------------------------------------------------
 
@@ -146,8 +194,33 @@ ALTER TABLE `Asignatura`
   MODIFY `id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
+-- AUTO_INCREMENT de la tabla `Horario`
+--
+ALTER TABLE `Horario`
+  MODIFY `id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `Asistencia`
+--
+ALTER TABLE `Asistencia`
+  MODIFY `id` int(5) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `Horario`
+--
+ALTER TABLE `Horario`
+  ADD CONSTRAINT `horario_ibfk_1` FOREIGN KEY (`idAsignatura`) REFERENCES `Asignatura` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `Asistencia`
+--
+ALTER TABLE `Asistencia`
+  ADD CONSTRAINT `asistencia_ibfk_1` FOREIGN KEY (`idAlumno`) REFERENCES `Alumno` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `asistencia_ibfk_2` FOREIGN KEY (`idAsignatura`) REFERENCES `Asignatura` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `Examen`

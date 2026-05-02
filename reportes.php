@@ -5,7 +5,8 @@ require_once("controllers/AlumnoController.php");
 $alumnoController = new AlumnoController();
 
 // Obtener promedios por asignatura
-$promediosAsignatura = $alumnoController->conexion->realizarConsultaSQL("
+$conexion = $alumnoController->getConexion();
+$promediosAsignatura = $conexion->realizarConsultaSQL("
     SELECT a.nombre AS asignatura, AVG(e.nota) AS promedio, COUNT(e.idAlumno) AS num_examenes
     FROM Examen e
     JOIN Asignatura a ON e.idAsignatura = a.id
@@ -14,7 +15,7 @@ $promediosAsignatura = $alumnoController->conexion->realizarConsultaSQL("
 ");
 
 // Obtener promedios por alumno
-$promediosAlumno = $alumnoController->conexion->realizarConsultaSQL("
+$promediosAlumno = $conexion->realizarConsultaSQL("
     SELECT al.nombre, al.apellidos, AVG(e.nota) AS promedio, COUNT(e.idAsignatura) AS num_examenes
     FROM Examen e
     JOIN Alumno al ON e.idAlumno = al.id

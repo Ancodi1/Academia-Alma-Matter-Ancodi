@@ -49,7 +49,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($id) {
         // Guardar archivo si existe
         if ($fotoPath) {
-            $stmt = $alumnoController->conexion->preparar("INSERT INTO Archivo (idAlumno, nombre_archivo, tipo, ruta) VALUES (?, ?, ?, ?)");
+            $conexion = $alumnoController->getConexion();
+            $stmt = $conexion->preparar("INSERT INTO Archivo (idAlumno, nombre_archivo, tipo, ruta) VALUES (?, ?, ?, ?)");
             $tipo = 'foto';
             $stmt->bind_param("isss", $id, $_FILES['fotoAlumno']['name'], $tipo, $fotoPath);
             $stmt->execute();

@@ -17,13 +17,19 @@
 			</div>
 			<div class="opcionGestion">
 				<a href="gestionAsignaturas.php">
-					<img src="img/gestionAsignaturas.png" alt="Gestión Asignaturas" class="imagenGestion">
+					<img src="img/asignaturas.png" alt="Gestión Asignaturas" class="imagenGestion">
 					<p>Gestión de Asignaturas</p>
 				</a>
 			</div>
 			<div class="opcionGestion">
+				<a href="gestionAsistencia.php">
+					<img src="img/estadisticas.png" alt="Asistencia Horarios" class="imagenGestion">
+					<p>Asistencia / Horarios</p>
+				</a>
+			</div>
+			<div class="opcionGestion">
 				<a href="reportes.php">
-					<img src="img/logo.png" alt="Reportes" class="imagenGestion">
+					<img src="img/estadisticas.png" alt="Reportes" class="imagenGestion">
 					<p>Reportes y Estadísticas</p>
 				</a>
 			</div>

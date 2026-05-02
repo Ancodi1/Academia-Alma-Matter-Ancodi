@@ -24,14 +24,15 @@ if (!isset($_SESSION['user_id'])) {
     <div id="cabecera">
 		<div id="logo">
             <?php $logoVersion = @filemtime($_SERVER['DOCUMENT_ROOT'] . '/img/logo.png') ?: time(); ?>
-			<a href="/index.php"><img src="/img/logo.png?v=<?php echo $logoVersion; ?>" alt="Academia Alma Mater"></a>
+			<a href="/index.php" title="Ir al inicio"><img src="/img/logo.png?v=<?php echo $logoVersion; ?>" alt="Academia Alma Mater"></a>
         </div>
         <div id="menu">
 			<a href="/index.php">Inicio</a>
 			<a href="/gestionAlumnos.php">Gestión Alumnos</a>
 			<a href="/gestionAsignaturas.php">Gestión Asignaturas</a>
+			<a href="/gestionAsistencia.php">Asistencia / Horarios</a>
 			<a href="/logout.php">Logout</a>
-			<button id="theme-toggle" aria-label="Cambiar tema" style="background: none; border: none; cursor: pointer; font-size: 18px; margin-left: 10px;">🌙</button>
+		<button id="theme-toggle" aria-label="Cambiar tema" class="theme-toggle">🌙</button>
         </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

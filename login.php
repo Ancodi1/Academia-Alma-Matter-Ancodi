@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
     
     $conn = new mysqlConn();
-    $stmt = $conn->conexion->prepare("SELECT id, password, role FROM Usuario WHERE username = ?");
+    $stmt = $conn->preparar("SELECT id, password, role FROM Usuario WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -32,15 +32,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="utf-8">
     <title>Login - Academia Alma Mater</title>
 </head>
-<body>
-    <div id="contenido" style="max-width: 400px; margin: 100px auto; text-align: center;">
-        <h1>Login</h1>
-        <?php if (isset($error)) echo "<p style='color:red;'>$error</p>"; ?>
-        <form method="post">
-            <input type="text" name="username" placeholder="Usuario" required><br><br>
-            <input type="password" name="password" placeholder="Contraseña" required><br><br>
-            <button type="submit">Iniciar Sesión</button>
-        </form>
+<body class="page-login">
+    <div id="contenido" class="login-container">
+        <div class="login-card">
+            <h1>Inicio de sesión</h1>
+            <?php if (isset($error)) echo "<p class='aviso error'>$error</p>"; ?>
+            <form method="post" class="login-form">
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input type="text" id="username" name="username" placeholder="admin" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" placeholder="admin123" required>
+                </div>
+                <button type="submit">Iniciar Sesión</button>
+            </form>
+        </div>
     </div>
 </body>
 </html>

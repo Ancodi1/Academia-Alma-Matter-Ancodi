@@ -26,7 +26,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($idAlumno && $idAsignatura && $fecha !== null && $nota !== null) {
         if ($alumnoController->ponerNotaExamen($idAsignatura, $idAlumno, $fecha, $nota)) {
             // Enviar email de notificación
-            $alumno = $alumnoController->conexion->realizarConsultaSQL("SELECT nombre, apellidos, email FROM Alumno WHERE id = $idAlumno")->fetch_assoc();
+            $conexion = $alumnoController->getConexion();
+            $alumno = $conexion->realizarConsultaSQL("SELECT nombre, apellidos, email FROM Alumno WHERE id = $idAlumno")->fetch_assoc();
             if ($alumno && $alumno['email']) {
                 require_once(__DIR__ . "/../models/mail.php");
                 $subject = "Nueva nota registrada";
