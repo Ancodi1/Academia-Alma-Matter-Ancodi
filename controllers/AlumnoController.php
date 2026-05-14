@@ -17,6 +17,54 @@ class AlumnoController {
         return $this->conexion->realizarConsultaSQL($sql);
     }
 
+    public function getAlumnosPorFiltro($curso = '', $idAsignatura = 0) {
+        if (!$curso && !$idAsignatura) {
+            return $this->getTodosLosAlumnos();
+        }
+
+        $sql = "SELECT DISTINCT al.id, al.nombre, al.apellidos, al.edad, al.email " .
+               "FROM Alumno al " .
+               "LEFT JOIN Examen ex ON ex.idAlumno = al.id " .
+               "LEFT JOIN Asistencia asi ON asi.idAlumno = al.id " .
+               "LEFT JOIN Asignatura asgEx ON asgEx.id = ex.idAsignatura " .
+               "LEFT JOIN Asignatura asgAsi ON asgAsi.id = asi.idAsignatura";
+
+        $where = [];
+        $params = [];
+        $types = "";
+
+        if ($curso) {
+            $where[] = "(asgEx.curso = ? OR asgAsi.curso = ?)";
+            $types .= "ss";
+            $params[] = $curso;
+            $params[] = $curso;
+        }
+
+        if ($idAsignatura) {
+            $where[] = "(asgEx.id = ? OR asgAsi.id = ?)";
+            $types .= "ii";
+            $params[] = intval($idAsignatura);
+            $params[] = intval($idAsignatura);
+        }
+
+        if ($where) {
+            $sql .= " WHERE " . implode(" AND ", $where);
+        }
+
+        $sql .= " ORDER BY al.nombre ASC";
+        $stmt = $this->conexion->preparar($sql);
+        if (!$stmt) return false;
+
+        if ($types) {
+            $stmt->bind_param($types, ...$params);
+        }
+
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
+    }
+
     public function buscarAlumnos($termino = '', $pagina = 1, $porPagina = 10) {
         $offset = ($pagina - 1) * $porPagina;
         

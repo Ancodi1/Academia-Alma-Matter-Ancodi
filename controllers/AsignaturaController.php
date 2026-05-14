@@ -13,6 +13,26 @@ class AsignaturaController {
         return $this->conexion->realizarConsultaSQL($sql);
     }
 
+    public function getCursos() {
+        $sql = "SELECT DISTINCT curso FROM Asignatura ORDER BY curso ASC";
+        return $this->conexion->realizarConsultaSQL($sql);
+    }
+
+    public function getAsignaturasPorCurso($curso = '') {
+        if ($curso) {
+            $stmt = $this->conexion->preparar("SELECT id, nombre, curso FROM Asignatura WHERE curso = ? ORDER BY nombre ASC");
+            if (!$stmt) return false;
+            $stmt->bind_param("s", $curso);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+            return $result;
+        }
+
+        $sql = "SELECT id, nombre, curso FROM Asignatura ORDER BY nombre ASC";
+        return $this->conexion->realizarConsultaSQL($sql);
+    }
+
     public function buscarAsignaturas($termino = '', $pagina = 1, $porPagina = 10) {
         $offset = ($pagina - 1) * $porPagina;
         

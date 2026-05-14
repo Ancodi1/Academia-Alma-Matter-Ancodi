@@ -17,6 +17,12 @@
 				</a>
 			</div>
 			<div class="opcionGestion">
+				<a href="listarAlumnos.php">
+					<img src="img/estadisticas.png" alt="Listar Alumnos" class="imagenGestion">
+					<p>Ver Lista de Alumnos</p>
+				</a>
+			</div>
+			<div class="opcionGestion">
 				<a href="editorAlumnos.php">
 					<img src="img/editarAlumno.png" alt="Editar Alumno" class="imagenGestion">
 					<p>Editar Alumnos</p>
