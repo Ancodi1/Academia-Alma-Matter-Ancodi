@@ -3,8 +3,17 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require 'vendor/autoload.php';
+if (file_exists(__DIR__ . '/../config.php')) {
+    require_once(__DIR__ . '/../config.php');
+} elseif (file_exists(__DIR__ . '/../config.example.php')) {
+    require_once(__DIR__ . '/../config.example.php');
+}
 
 function enviarEmail($to, $subject, $body) {
+    if (!defined('MAIL_HOST') || !defined('MAIL_USERNAME') || MAIL_USERNAME === '' || MAIL_USERNAME === 'tuemail@gmail.com') {
+        error_log("Email no enviado: configuración SMTP pendiente para $to");
+        return false;
+    }
     $mail = new PHPMailer(true);
 
     try {

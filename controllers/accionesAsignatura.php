@@ -2,6 +2,9 @@
 
 require_once("AsignaturaController.php");
 require_once(__DIR__ . "/../models/csrf.php");
+require_once(__DIR__ . "/../models/auth.php");
+
+requerirInterno();
 
 $asignaturaController = new AsignaturaController();
 

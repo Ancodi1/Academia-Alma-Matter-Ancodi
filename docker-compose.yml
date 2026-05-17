@@ -22,8 +22,11 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-      - ./almamater.sql:/docker-entrypoint-initdb.d/almamater.sql
-      - ./optimizaciones.sql:/docker-entrypoint-initdb.d/optimizaciones.sql
+      - ./almamater.sql:/docker-entrypoint-initdb.d/01-almamater.sql
+      - ./database_schema_updates.sql:/docker-entrypoint-initdb.d/02-schema-updates.sql
+      - ./database_priority_medium_updates.sql:/docker-entrypoint-initdb.d/03-priority-medium.sql
+      - ./database_advanced_updates.sql:/docker-entrypoint-initdb.d/04-advanced.sql
+      - ./database_review_fixes.sql:/docker-entrypoint-initdb.d/05-review-fixes.sql
 
 volumes:
   db_data:

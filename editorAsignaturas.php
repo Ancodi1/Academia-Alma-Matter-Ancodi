@@ -1,5 +1,6 @@
 <?php
 require("views/cabecera.php");
+requerirInterno();
 require_once("controllers/AsignaturaController.php");
 require_once("models/csrf.php");
 

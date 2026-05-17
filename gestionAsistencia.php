@@ -1,4 +1,5 @@
 <?php require_once("views/cabecera.php"); ?>
+<?php requerirInterno(); ?>
 <?php require_once("controllers/HorarioController.php"); ?>
 
 <?php
@@ -7,7 +8,7 @@ $proximasClases = $horarioController->getProximasClases(4);
 ?>
 
 <div id="contenido">
-    <h1>Bienvenido a Alma Mater</h1>
+    <h1>Bienvenido a Refuerzo Escolar</h1>
     <div id="contenidoIndex">
         <h2>Gestión de Asistencia y Horarios</h2>
         <p>Añade control de asistencia, crea horarios de clase y revisa el calendario semanal.</p>
@@ -18,6 +19,12 @@ $proximasClases = $horarioController->getProximasClases(4);
             <a href="nuevoAsistencia.php">
                 <img src="img/estadisticas.png" alt="Añadir Asistencia" class="imagenGestion">
                 <p>Añadir Asistencia</p>
+            </a>
+        </div>
+        <div class="opcionGestion">
+            <a href="asistenciaClase.php">
+                <img src="img/estadisticas.png" alt="Asistencia por clase" class="imagenGestion">
+                <p>Asistencia por Clase</p>
             </a>
         </div>
         <div class="opcionGestion">

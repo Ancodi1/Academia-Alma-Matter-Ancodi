@@ -1,5 +1,7 @@
 <?php require_once("views/cabecera.php"); ?>
+<?php requerirInterno(); ?>
 <?php require_once("controllers/AsistenciaController.php"); ?>
+<?php require_once("models/csrf.php"); ?>
 
 <?php
 $asistenciaController = new AsistenciaController();
@@ -8,7 +10,7 @@ $asignaturas = $asistenciaController->getAsignaturas();
 ?>
 
 <div id="contenido">
-    <h1>Bienvenido a Alma Mater</h1>
+    <h1>Bienvenido a Refuerzo Escolar</h1>
     <h2>Registrar Asistencia</h2>
 
     <?php
@@ -23,6 +25,7 @@ $asignaturas = $asistenciaController->getAsignaturas();
     ?>
 
     <form id="nuevaAsistencia" action="controllers/nuevaAsistencia.php" method="post">
+        <input type="hidden" name="csrf_token" value="<?php echo generarTokenCSRF(); ?>">
         <label for="idAlumno">Alumno:</label>
         <select id="idAlumno" name="idAlumno">
             <option value="">Seleccione un alumno</option>

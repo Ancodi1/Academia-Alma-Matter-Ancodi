@@ -1,5 +1,6 @@
 <?php
 require("views/cabecera.php");
+requerirInterno();
 require_once("controllers/AlumnoController.php");
 require_once("controllers/AsignaturaController.php");
 
@@ -26,6 +27,12 @@ if ($todasAsignaturas) {
 <div id="contenido">
     <h1>Lista de Alumnos</h1>
     <h3>Filtrar por curso y asignatura</h3>
+
+    <div class="toolbar">
+        <a class="btn-link" href="/exportar.php?tipo=alumnos&formato=csv">Exportar CSV</a>
+        <a class="btn-link" href="/exportar.php?tipo=alumnos&formato=xls">Exportar Excel</a>
+        <a class="btn-link" href="/exportar.php?tipo=alumnos&formato=pdf" target="_blank">Exportar PDF</a>
+    </div>
 
     <form method="GET" style="margin: 20px 0; display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;">
         <div>

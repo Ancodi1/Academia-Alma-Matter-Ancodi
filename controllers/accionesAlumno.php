@@ -1,6 +1,9 @@
 <?php
 require_once(__DIR__ . "/AlumnoController.php");
 require_once(__DIR__ . "/../models/csrf.php");
+require_once(__DIR__ . "/../models/auth.php");
+
+requerirInterno();
 
 $alumnoController = new AlumnoController();
 
@@ -18,6 +21,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $apellidos = isset($_POST['apellidos']) ? trim($_POST['apellidos']) : '';
         $edad = isset($_POST['edad']) ? trim($_POST['edad']) : '';
         $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+        $telefono = isset($_POST['telefono']) ? trim($_POST['telefono']) : '';
+        $direccion = isset($_POST['direccion']) ? trim($_POST['direccion']) : '';
+        $tutor = isset($_POST['tutor']) ? trim($_POST['tutor']) : '';
+        $contactoEmergencia = isset($_POST['contacto_emergencia']) ? trim($_POST['contacto_emergencia']) : '';
+        $centro = isset($_POST['centro']) ? trim($_POST['centro']) : '';
+        $cursoActual = isset($_POST['curso_actual']) ? trim($_POST['curso_actual']) : '';
+        $fechaAlta = isset($_POST['fecha_alta']) ? trim($_POST['fecha_alta']) : date('Y-m-d');
+        $observaciones = isset($_POST['observaciones']) ? trim($_POST['observaciones']) : '';
 
         if ($nombre === '' || $apellidos === '' || $edad === '' || $email === '') {
             header("Location: ../editorAlumnos.php?error=validacion_campos");
@@ -32,11 +43,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit;
         }
 
-        if ($alumnoController->modificarAlumno($id, $nombre, $apellidos, $edad, $email)) {
-            header("Location: ../editorAlumnos.php?mensaje=modificado");
+        $origen = isset($_POST['origen']) && $_POST['origen'] === 'ficha' ? "../fichaAlumno.php?id=" . intval($id) : "../editorAlumnos.php";
+        if ($alumnoController->modificarAlumno($id, $nombre, $apellidos, $edad, $email, $telefono, $direccion, $tutor, $contactoEmergencia, $centro, $cursoActual, $fechaAlta, $observaciones)) {
+            header("Location: " . $origen . (strpos($origen, '?') === false ? '?' : '&') . "mensaje=modificado");
             exit;
         } else {
-            header("Location: ../editorAlumnos.php?error=modificar");
+            header("Location: " . $origen . (strpos($origen, '?') === false ? '?' : '&') . "error=modificar");
             exit;
         }
     }

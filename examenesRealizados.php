@@ -1,6 +1,8 @@
 <?php
 require("views/cabecera.php");
+requerirInterno();
 require_once("controllers/AlumnoController.php");
+require_once("models/csrf.php");
 
 $alumnoController = new AlumnoController();
 $idAlumno = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -34,6 +36,8 @@ $examenes = $alumnoController->getExamenesPorAlumno($idAlumno);
 				<td id="filaAlumnos"><input type="number" name="nuevaNota" min="0" max="10" step="0.01" value="<?php echo htmlspecialchars($row['nota']); ?>" disabled></td>
 				<td id="filaAlumnos">
 					<input type="hidden" name="idAlumno" value="<?php echo $idAlumno; ?>">
+                    <input type="hidden" name="csrf_token" value="<?php echo generarTokenCSRF(); ?>">
+					<input type="hidden" name="idExamen" value="<?php echo intval($row['id']); ?>">
 					<input type="hidden" name="idAsignatura" value="<?php echo htmlspecialchars($row['idAsignatura']); ?>">
 					<input type="hidden" name="fecha" value="<?php echo htmlspecialchars($row['fecha']); ?>">
 					<button type="button" class="btn-editar">Editar</button>
@@ -70,5 +74,3 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 </html>
-
-

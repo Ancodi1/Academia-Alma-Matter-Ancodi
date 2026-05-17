@@ -1,6 +1,6 @@
 # 🤝 Guía de Contribución
 
-¡Gracias por tu interés en contribuir a Academia Alma Mater! Este documento te guiará en el proceso de contribución.
+¡Gracias por tu interés en contribuir a Refuerzo Escolar! Este documento te guiará en el proceso de contribución.
 
 ## 🚀 Cómo Contribuir
 
@@ -8,8 +8,8 @@
 ```bash
 # Fork el repositorio en GitHub
 # Luego clona tu fork
-git clone https://github.com/tu-usuario/academia-alma-mater.git
-cd academia-alma-mater
+git clone https://github.com/tu-usuario/refuerzo-escolar.git
+cd refuerzo-escolar
 ```
 
 ### 2. Configurar el Entorno
@@ -224,4 +224,4 @@ Los contribuidores serán reconocidos en:
 
 ---
 
-**¡Gracias por contribuir a hacer Academia Alma Mater mejor para todos! 🎓**
+**¡Gracias por contribuir a hacer Refuerzo Escolar mejor para todos! 🎓**

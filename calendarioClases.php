@@ -1,9 +1,15 @@
 <?php require_once("views/cabecera.php"); ?>
+<?php requerirInterno(); ?>
 <?php require_once("controllers/HorarioController.php"); ?>
 
 <?php
 $horarioController = new HorarioController();
-$horario = $horarioController->getHorarioSemanal();
+$idAsignatura = isset($_GET['asignatura']) ? intval($_GET['asignatura']) : 0;
+$idProfesor = isset($_GET['profesor']) ? intval($_GET['profesor']) : 0;
+$aulaFiltro = isset($_GET['aula']) ? trim($_GET['aula']) : '';
+$asignaturas = $horarioController->getAsignaturas();
+$profesores = $horarioController->getProfesores();
+$horario = $horarioController->getHorarioSemanal($idAsignatura, $idProfesor, $aulaFiltro);
 $semanal = [
     'Lunes' => [],
     'Martes' => [],
@@ -22,17 +28,35 @@ if ($horario && $horario->num_rows > 0) {
 ?>
 
 <div id="contenido">
-    <h1>Bienvenido a Alma Mater</h1>
+    <h1>Bienvenido a Refuerzo Escolar</h1>
     <h2>Calendario de Clases</h2>
 
-    <div style="margin: 20px 0; text-align: center;">
-        <a href="nuevoHorario.php" style="display: inline-block; padding: 12px 24px; background: var(--primary-color); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.3s ease;">
-            ➕ Agregar Nueva Clase
-        </a>
-        <p style="margin: 10px 0 0 0; font-size: 14px; color: var(--text-color); opacity: 0.8;">
-            <em>Nota: Debes estar logueado para crear clases</em>
-        </p>
-    </div>
+    <form method="GET" class="filter-bar">
+        <div>
+            <label for="asignatura">Asignatura</label>
+            <select id="asignatura" name="asignatura">
+                <option value="0">Todas</option>
+                <?php if ($asignaturas): while ($row = $asignaturas->fetch_assoc()): ?>
+                    <option value="<?php echo intval($row['id']); ?>" <?php echo $idAsignatura === intval($row['id']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($row['nombre'] . ' · ' . $row['curso']); ?></option>
+                <?php endwhile; endif; ?>
+            </select>
+        </div>
+        <div>
+            <label for="profesor">Profesor</label>
+            <select id="profesor" name="profesor">
+                <option value="0">Todos</option>
+                <?php if ($profesores): while ($row = $profesores->fetch_assoc()): ?>
+                    <option value="<?php echo intval($row['id']); ?>" <?php echo $idProfesor === intval($row['id']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($row['apellidos'] . ', ' . $row['nombre']); ?></option>
+                <?php endwhile; endif; ?>
+            </select>
+        </div>
+        <div>
+            <label for="aula">Aula</label>
+            <input id="aula" type="text" name="aula" value="<?php echo htmlspecialchars($aulaFiltro); ?>">
+        </div>
+        <button type="submit">Filtrar</button>
+        <a class="btn-link" href="nuevoHorario.php">Agregar clase</a>
+    </form>
 
     <div id="calendarioSemana">
         <?php foreach ($semanal as $dia => $clases): ?>
@@ -47,8 +71,12 @@ if ($horario && $horario->num_rows > 0) {
                                 <span class="curso">(<?php echo htmlspecialchars($clase['curso']); ?>)</span>
                                 <br>
                                 Aula <?php echo htmlspecialchars($clase['aula']); ?>
-                                <?php if (!empty($clase['profesor'])): ?>
-                                    - <?php echo htmlspecialchars($clase['profesor']); ?>
+                                <?php
+                                $profesorNombre = trim(($clase['profesorNombre'] ?? '') . ' ' . ($clase['profesorApellidos'] ?? ''));
+                                if ($profesorNombre === '') $profesorNombre = $clase['profesor'] ?? '';
+                                ?>
+                                <?php if (!empty($profesorNombre)): ?>
+                                    - <?php echo htmlspecialchars($profesorNombre); ?>
                                 <?php endif; ?>
                             </li>
                         <?php endforeach; ?>

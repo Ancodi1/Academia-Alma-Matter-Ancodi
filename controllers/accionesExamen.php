@@ -1,10 +1,19 @@
 <?php
 require_once(__DIR__ . "/AlumnoController.php");
+require_once(__DIR__ . "/../models/auth.php");
+require_once(__DIR__ . "/../models/csrf.php");
+
+requerirInterno();
 
 $alumnoController = new AlumnoController();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if (!isset($_POST['csrf_token']) || !validarTokenCSRF($_POST['csrf_token'])) {
+        header("Location: ../editorAlumnos.php?error=csrf");
+        exit;
+    }
     $idAlumno = isset($_POST['idAlumno']) ? intval($_POST['idAlumno']) : 0;
+    $idExamen = isset($_POST['idExamen']) ? intval($_POST['idExamen']) : 0;
     $idAsignatura = isset($_POST['idAsignatura']) ? intval($_POST['idAsignatura']) : 0;
     $fecha = isset($_POST['fecha']) ? trim($_POST['fecha']) : '';
 
@@ -15,7 +24,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             header("Location: ../examenesRealizados.php?id=" . $idAlumno . "&error=examen_validacion");
             exit;
         }
-        if ($alumnoController->actualizarExamen($idAlumno, $idAsignatura, $fecha, $nuevaFecha, $nuevaNota)) {
+        $ok = $idExamen > 0
+            ? $alumnoController->actualizarExamenPorId($idExamen, $nuevaFecha, $nuevaNota)
+            : $alumnoController->actualizarExamen($idAlumno, $idAsignatura, $fecha, $nuevaFecha, $nuevaNota);
+        if ($ok) {
             header("Location: ../examenesRealizados.php?id=" . $idAlumno . "&mensaje=examen_actualizado");
             exit;
         } else {
@@ -25,7 +37,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     if (isset($_POST['eliminarExamen'])) {
-        if ($alumnoController->eliminarExamen($idAlumno, $idAsignatura, $fecha)) {
+        $ok = $idExamen > 0
+            ? $alumnoController->eliminarExamenPorId($idExamen)
+            : $alumnoController->eliminarExamen($idAlumno, $idAsignatura, $fecha);
+        if ($ok) {
             header("Location: ../examenesRealizados.php?id=" . $idAlumno . "&mensaje=examen_eliminado");
             exit;
         } else {
@@ -38,5 +53,3 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 header("Location: ../editorAlumnos.php");
 exit;
 ?>
-
-

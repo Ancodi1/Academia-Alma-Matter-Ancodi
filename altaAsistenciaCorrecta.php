@@ -1,7 +1,8 @@
 <?php require_once("views/cabecera.php"); ?>
+<?php requerirInterno(); ?>
 
 <div id="contenido">
-    <h1>Bienvenido a Alma Mater</h1>
+    <h1>Bienvenido a Refuerzo Escolar</h1>
     <div id="contenidoIndex">
         <h2>Asistencia registrada correctamente</h2>
         <p>La asistencia ha sido guardada con éxito.</p>

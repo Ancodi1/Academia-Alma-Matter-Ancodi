@@ -1,6 +1,6 @@
 # 🚀 Guía de Despliegue
 
-Esta guía te ayudará a desplegar Academia Alma Mater en diferentes entornos.
+Esta guía te ayudará a desplegar Refuerzo Escolar en diferentes entornos.
 
 ## 📋 Requisitos del Servidor
 
@@ -123,11 +123,11 @@ echo "web: vendor/bin/heroku-php-apache2" > Procfile
 # Crear app.json
 cat > app.json << EOF
 {
-  "name": "academia-alma-mater",
+  "name": "refuerzo-escolar",
   "description": "Sistema de gestión académica",
   "keywords": ["php", "mysql", "academia"],
   "website": "https://tu-app.herokuapp.com",
-  "repository": "https://github.com/tu-usuario/academia-alma-mater",
+  "repository": "https://github.com/tu-usuario/refuerzo-escolar",
   "success_url": "/",
   "env": {
     "DB_HOST": {
@@ -160,8 +160,8 @@ sudo apt update
 sudo apt install apache2 mysql-server php php-mysql
 
 # Clonar repositorio
-git clone https://github.com/tu-usuario/academia-alma-mater.git
-sudo mv academia-alma-mater /var/www/html/
+git clone https://github.com/tu-usuario/refuerzo-escolar.git
+sudo mv refuerzo-escolar /var/www/html/
 
 # Configurar Apache
 sudo a2enmod rewrite

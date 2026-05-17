@@ -5,8 +5,8 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Academia Alma Mater",
-            "email": "contacto@academia-alma-mater.com"
+            "name": "Refuerzo Escolar",
+            "email": "contacto@refuerzo-escolar.com"
         }
     ],
     "require": {
@@ -52,9 +52,9 @@
         "mysql",
         "educacion"
     ],
-    "homepage": "https://github.com/tu-usuario/academia-alma-mater",
+    "homepage": "https://github.com/tu-usuario/refuerzo-escolar",
     "support": {
-        "issues": "https://github.com/tu-usuario/academia-alma-mater/issues",
-        "source": "https://github.com/tu-usuario/academia-alma-mater"
+        "issues": "https://github.com/tu-usuario/refuerzo-escolar/issues",
+        "source": "https://github.com/tu-usuario/refuerzo-escolar"
     }
 }

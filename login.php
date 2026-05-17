@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
     
     $conn = new mysqlConn();
-    $stmt = $conn->preparar("SELECT id, password, role FROM Usuario WHERE username = ?");
+    $stmt = $conn->preparar("SELECT id, password, role, idAlumno FROM Usuario WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -16,7 +16,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($password, $row['password'])) {
             $_SESSION['user_id'] = $row['id'];
             $_SESSION['role'] = $row['role'];
-            header("Location: index.php");
+            $_SESSION['idAlumno'] = $row['idAlumno'];
+            header("Location: " . (in_array($row['role'], ['student', 'family']) ? "portal.php" : "index.php"));
             exit;
         }
     }
@@ -30,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" type="text/css" href="academia.css">
     <link href='https://fonts.googleapis.com/css?family=Actor' rel='stylesheet'>
     <meta charset="utf-8">
-    <title>Login - Academia Alma Mater</title>
+    <title>Login - Refuerzo Escolar</title>
 </head>
 <body class="page-login">
     <div id="contenido" class="login-container">

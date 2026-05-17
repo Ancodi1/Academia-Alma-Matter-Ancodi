@@ -12,7 +12,7 @@ define('DB_NAME', 'almamater');
 define('DB_CHARSET', 'utf8');
 
 // Configuración de la aplicación
-define('APP_NAME', 'Academia Alma Mater');
+define('APP_NAME', 'Refuerzo Escolar');
 define('APP_VERSION', '1.0.0');
 define('APP_URL', 'http://localhost/academia');
 
@@ -23,7 +23,7 @@ define('MAIL_USERNAME', 'tuemail@gmail.com');
 define('MAIL_PASSWORD', 'tupassword');
 define('MAIL_ENCRYPTION', 'tls');
 define('MAIL_FROM', 'tuemail@gmail.com');
-define('MAIL_FROM_NAME', 'Academia Alma Mater');
+define('MAIL_FROM_NAME', 'Refuerzo Escolar');
 define('SESSION_LIFETIME', 7200); // 2 horas en segundos
 
 // Configuración de paginación
@@ -50,7 +50,7 @@ define('SMTP_PORT', 587);
 define('SMTP_USERNAME', '');
 define('SMTP_PASSWORD', '');
 define('SMTP_FROM_EMAIL', '');
-define('SMTP_FROM_NAME', 'Academia Alma Mater');
+define('SMTP_FROM_NAME', 'Refuerzo Escolar');
 
 // Configuración de archivos
 define('UPLOAD_MAX_SIZE', 5242880); // 5MB en bytes

@@ -13,8 +13,20 @@ class AlumnoController {
     }
     
     public function getTodosLosAlumnos() {
-        $sql = "SELECT id, nombre, apellidos, edad, email FROM Alumno ORDER BY nombre ASC";
+        $sql = "SELECT id, nombre, apellidos, edad, email, telefono, curso_actual FROM Alumno ORDER BY nombre ASC";
         return $this->conexion->realizarConsultaSQL($sql);
+    }
+
+    public function getAlumnoPorId($id) {
+        $stmt = $this->conexion->preparar("SELECT * FROM Alumno WHERE id = ?");
+        if (!$stmt) return false;
+        $idInt = intval($id);
+        $stmt->bind_param("i", $idInt);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $alumno = $result->fetch_assoc();
+        $stmt->close();
+        return $alumno;
     }
 
     public function getAlumnosPorFiltro($curso = '', $idAsignatura = 0) {
@@ -69,12 +81,12 @@ class AlumnoController {
         $offset = ($pagina - 1) * $porPagina;
         
         if ($termino) {
-            $stmt = $this->conexion->preparar("SELECT id, nombre, apellidos, edad, email FROM Alumno WHERE nombre LIKE ? OR apellidos LIKE ? ORDER BY nombre ASC LIMIT ? OFFSET ?");
+            $stmt = $this->conexion->preparar("SELECT * FROM Alumno WHERE nombre LIKE ? OR apellidos LIKE ? OR email LIKE ? ORDER BY nombre ASC LIMIT ? OFFSET ?");
             if (!$stmt) return false;
             $terminoLike = "%$termino%";
-            $stmt->bind_param("ssii", $terminoLike, $terminoLike, $porPagina, $offset);
+            $stmt->bind_param("sssii", $terminoLike, $terminoLike, $terminoLike, $porPagina, $offset);
         } else {
-            $stmt = $this->conexion->preparar("SELECT id, nombre, apellidos, edad, email FROM Alumno ORDER BY nombre ASC LIMIT ? OFFSET ?");
+            $stmt = $this->conexion->preparar("SELECT * FROM Alumno ORDER BY nombre ASC LIMIT ? OFFSET ?");
             if (!$stmt) return false;
             $stmt->bind_param("ii", $porPagina, $offset);
         }
@@ -87,10 +99,10 @@ class AlumnoController {
 
     public function contarAlumnos($termino = '') {
         if ($termino) {
-            $stmt = $this->conexion->preparar("SELECT COUNT(*) as total FROM Alumno WHERE nombre LIKE ? OR apellidos LIKE ?");
+            $stmt = $this->conexion->preparar("SELECT COUNT(*) as total FROM Alumno WHERE nombre LIKE ? OR apellidos LIKE ? OR email LIKE ?");
             if (!$stmt) return 0;
             $terminoLike = "%$termino%";
-            $stmt->bind_param("ss", $terminoLike, $terminoLike);
+            $stmt->bind_param("sss", $terminoLike, $terminoLike, $terminoLike);
         } else {
             $stmt = $this->conexion->preparar("SELECT COUNT(*) as total FROM Alumno");
             if (!$stmt) return 0;
@@ -116,7 +128,7 @@ class AlumnoController {
     }
 
     public function getExamenesPorAlumno($idAlumno) {
-        $stmt = $this->conexion->preparar("SELECT e.idAlumno, e.idAsignatura, e.fecha, e.nota, a.nombre AS asignatura
+        $stmt = $this->conexion->preparar("SELECT e.id, e.idAlumno, e.idAsignatura, e.fecha, e.nota, a.nombre AS asignatura
                 FROM Examen e
                 LEFT JOIN Asignatura a ON a.id = e.idAsignatura
                 WHERE e.idAlumno = ?
@@ -128,6 +140,17 @@ class AlumnoController {
         $result = $stmt->get_result();
         $stmt->close();
         return $result;
+    }
+
+    public function actualizarExamenPorId($idExamen, $nuevaFecha, $nuevaNota) {
+        $stmt = $this->conexion->preparar("UPDATE Examen SET fecha = ?, nota = ? WHERE id = ?");
+        if (!$stmt) return false;
+        $idExamenInt = intval($idExamen);
+        $notaVal = is_numeric($nuevaNota) ? floatval($nuevaNota) : 0.0;
+        $stmt->bind_param("sdi", $nuevaFecha, $notaVal, $idExamenInt);
+        $ok = $stmt->execute();
+        $stmt->close();
+        return $ok;
     }
 
     public function actualizarExamen($idAlumno, $idAsignatura, $fechaOriginal, $nuevaFecha, $nuevaNota) {
@@ -152,13 +175,26 @@ class AlumnoController {
         $stmt->close();
         return $ok;
     }
+
+    public function eliminarExamenPorId($idExamen) {
+        $stmt = $this->conexion->preparar("DELETE FROM Examen WHERE id = ?");
+        if (!$stmt) return false;
+        $idExamenInt = intval($idExamen);
+        $stmt->bind_param("i", $idExamenInt);
+        $ok = $stmt->execute();
+        $stmt->close();
+        return $ok;
+    }
     
-    public function modificarAlumno($id, $nombre, $apellidos, $edad, $email = null) {
-        $stmt = $this->conexion->preparar("UPDATE Alumno SET nombre = ?, apellidos = ?, edad = ?, email = ? WHERE id = ?");
+    public function modificarAlumno($id, $nombre, $apellidos, $edad, $email = null, $telefono = null, $direccion = null, $tutor = null, $contactoEmergencia = null, $centro = null, $cursoActual = null, $fechaAlta = null, $observaciones = null) {
+        $stmt = $this->conexion->preparar(
+            "UPDATE Alumno SET nombre = ?, apellidos = ?, edad = ?, email = ?, telefono = ?, direccion = ?, tutor = ?, contacto_emergencia = ?, centro = ?, curso_actual = ?, fecha_alta = ?, observaciones = ? WHERE id = ?"
+        );
         if (!$stmt) return false;
         $idInt = intval($id);
         $edadInt = intval($edad);
-        $stmt->bind_param("ssisi", $nombre, $apellidos, $edadInt, $email, $idInt);
+        $fechaAlta = $fechaAlta ?: date('Y-m-d');
+        $stmt->bind_param("ssisssssssssi", $nombre, $apellidos, $edadInt, $email, $telefono, $direccion, $tutor, $contactoEmergencia, $centro, $cursoActual, $fechaAlta, $observaciones, $idInt);
         $ok = $stmt->execute();
         $stmt->close();
         return $ok;
@@ -174,11 +210,14 @@ class AlumnoController {
         return $ok;
     }
     
-    public function agregarAlumno($nombre, $apellidos, $edad, $email = null) {
-        $stmt = $this->conexion->preparar("INSERT INTO Alumno (nombre, apellidos, edad, email) VALUES (?, ?, ?, ?)");
+    public function agregarAlumno($nombre, $apellidos, $edad, $email = null, $telefono = null, $direccion = null, $tutor = null, $contactoEmergencia = null, $centro = null, $cursoActual = null, $fechaAlta = null, $observaciones = null) {
+        $stmt = $this->conexion->preparar(
+            "INSERT INTO Alumno (nombre, apellidos, edad, email, telefono, direccion, tutor, contacto_emergencia, centro, curso_actual, fecha_alta, observaciones) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        );
         if (!$stmt) return false;
         $edadInt = intval($edad);
-        $stmt->bind_param("ssis", $nombre, $apellidos, $edadInt, $email);
+        $fechaAlta = $fechaAlta ?: date('Y-m-d');
+        $stmt->bind_param("ssisssssssss", $nombre, $apellidos, $edadInt, $email, $telefono, $direccion, $tutor, $contactoEmergencia, $centro, $cursoActual, $fechaAlta, $observaciones);
         $ok = $stmt->execute();
         $id = $this->conexion->getInsertId();
         $stmt->close();
@@ -200,6 +239,39 @@ class AlumnoController {
     public function getTodasLasAsignaturas() {
         $sql = "SELECT id, nombre FROM Asignatura ORDER BY nombre ASC";
         return $this->conexion->realizarConsultaSQL($sql);
+    }
+
+    public function getResumenAlumno($idAlumno) {
+        $stmt = $this->conexion->preparar(
+            "SELECT " .
+            "(SELECT AVG(nota) FROM Examen WHERE idAlumno = ?) AS media, " .
+            "(SELECT COUNT(*) FROM Examen WHERE idAlumno = ?) AS examenes, " .
+            "(SELECT COUNT(*) FROM Asistencia WHERE idAlumno = ? AND estado = 'Ausente') AS ausencias, " .
+            "(SELECT COUNT(*) FROM Asistencia WHERE idAlumno = ? AND estado = 'Justificada') AS justificadas"
+        );
+        if (!$stmt) return false;
+        $idInt = intval($idAlumno);
+        $stmt->bind_param("iiii", $idInt, $idInt, $idInt, $idInt);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return $row;
+    }
+
+    public function getAsistenciasPorAlumno($idAlumno, $limit = 10) {
+        $stmt = $this->conexion->preparar(
+            "SELECT asi.fecha, asi.estado, asig.nombre AS asignatura, asig.curso " .
+            "FROM Asistencia asi JOIN Asignatura asig ON asig.id = asi.idAsignatura " .
+            "WHERE asi.idAlumno = ? ORDER BY asi.fecha DESC, asi.id DESC LIMIT ?"
+        );
+        if (!$stmt) return false;
+        $idInt = intval($idAlumno);
+        $limitInt = intval($limit);
+        $stmt->bind_param("ii", $idInt, $limitInt);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $stmt->close();
+        return $result;
     }
 }
 ?>

@@ -1,5 +1,6 @@
 <?php
 require_once("views/cabecera.php");
+requerirInterno();
 require_once("controllers/AsignaturaController.php");
 
 $asignaturaController = new AsignaturaController();
@@ -8,7 +9,7 @@ $todasAsignaturas = $asignaturaController->getTodasLasAsignaturas();
 ?>
 		<!--Divisor del Contenido-->
 		<div id="contenido">
-		 <h1>Bienvenido a Alma Mater </h1>
+		 <h1>Bienvenido a Refuerzo Escolar </h1>
 			<div id="contenidoIndex">
 				<h2>Gestión de Asignaturas.</h2>
 		</div>

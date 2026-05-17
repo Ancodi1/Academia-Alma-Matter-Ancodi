@@ -1,4 +1,4 @@
-# 🎓 Academia Alma Mater
+# 🎓 Refuerzo Escolar
 
 Sistema de gestión académica completo desarrollado en PHP con MySQL. Permite gestionar alumnos, asignaturas y exámenes de forma intuitiva y segura.
 
@@ -24,8 +24,8 @@ Sistema de gestión académica completo desarrollado en PHP con MySQL. Permite g
 
 1. **Clonar el repositorio**
 ```bash
-git clone https://github.com/tu-usuario/academia-alma-mater.git
-cd academia-alma-mater
+git clone https://github.com/tu-usuario/refuerzo-escolar.git
+cd refuerzo-escolar
 ```
 
 2. **Configurar la base de datos**

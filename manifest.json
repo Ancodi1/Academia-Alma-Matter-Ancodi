@@ -1,6 +1,6 @@
 {
-  "name": "Academia Alma Mater",
-  "short_name": "Alma Mater",
+  "name": "Refuerzo Escolar",
+  "short_name": "Refuerzo Escolar",
   "description": "Sistema de gestión académica",
   "start_url": "/index.php",
   "display": "standalone",

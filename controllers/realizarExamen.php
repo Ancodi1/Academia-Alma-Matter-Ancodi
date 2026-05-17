@@ -1,9 +1,17 @@
 <?php
 require_once(__DIR__ . "/AlumnoController.php");
+require_once(__DIR__ . "/../models/auth.php");
+require_once(__DIR__ . "/../models/csrf.php");
+
+requerirInterno();
 
 $alumnoController = new AlumnoController();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if (!isset($_POST['csrf_token']) || !validarTokenCSRF($_POST['csrf_token'])) {
+        header("Location: ../editorAlumnos.php?error=csrf");
+        exit;
+    }
     $idAlumno = isset($_POST["idAlumno"]) ? intval($_POST["idAlumno"]) : null;
     $idAsignatura = isset($_POST["idAsignatura"]) ? intval($_POST["idAsignatura"]) : null;
     $fecha = isset($_POST["fecha"]) ? trim($_POST["fecha"]) : null;
@@ -27,7 +35,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if ($alumnoController->ponerNotaExamen($idAsignatura, $idAlumno, $fecha, $nota)) {
             // Enviar email de notificación
             $conexion = $alumnoController->getConexion();
-            $alumno = $conexion->realizarConsultaSQL("SELECT nombre, apellidos, email FROM Alumno WHERE id = $idAlumno")->fetch_assoc();
+            $stmtAlumno = $conexion->preparar("SELECT nombre, apellidos, email FROM Alumno WHERE id = ?");
+            $stmtAlumno->bind_param("i", $idAlumno);
+            $stmtAlumno->execute();
+            $alumno = $stmtAlumno->get_result()->fetch_assoc();
+            $stmtAlumno->close();
             if ($alumno && $alumno['email']) {
                 require_once(__DIR__ . "/../models/mail.php");
                 $subject = "Nueva nota registrada";

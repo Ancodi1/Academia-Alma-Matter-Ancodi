@@ -1,8 +1,9 @@
 <?php require_once("views/cabecera.php"); ?>
+<?php requerirInterno(); ?>
 
 		<!--Divisor del Contenido-->
 		<div id="contenido">
-		 <h1>Bienvenido a Alma Mater </h1>
+		 <h1>Bienvenido a Refuerzo Escolar </h1>
 			<div id="contenidoIndex">
 				<h2>Gestión de Alumnos.</h2> 
                 <h2>Alumno dado de alta correctamente</h2>
@@ -20,4 +21,4 @@
 		
         <?php require_once("views/pieDePagina.php"); ?>
 	</body>
-</html>  
+</html>

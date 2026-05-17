@@ -1,8 +1,10 @@
 <?php require_once("views/cabecera.php"); ?>
+<?php requerirInterno(); ?>
+<?php require_once("models/csrf.php"); ?>
 
 		<!--Divisor del Contenido-->
 		<div id="contenido">
-		 <h1>Bienvenido a Alma Mater </h1>
+		 <h1>Bienvenido a Refuerzo Escolar </h1>
 		 <h2>Nuevo Alumno </h2>
 		 
 		 <?php
@@ -15,12 +17,17 @@
 		         echo '<div id="error" style="color: red; margin: 10px 0; padding: 10px; background-color: #ffe6e6; border: 1px solid #ff9999; border-radius: 5px;">La edad debe ser un número válido entre 1 y 120.</div>';
 		     } elseif ($error == 'base_datos') {
 		         echo '<div id="error" style="color: red; margin: 10px 0; padding: 10px; background-color: #ffe6e6; border: 1px solid #ff9999; border-radius: 5px;">Error al guardar en la base de datos. Inténtelo de nuevo.</div>';
+		     } elseif ($error == 'foto_tamano') {
+		         echo '<div id="error" style="color: red; margin: 10px 0; padding: 10px; background-color: #ffe6e6; border: 1px solid #ff9999; border-radius: 5px;">La foto no puede superar 5 MB.</div>';
+		     } elseif ($error == 'foto_tipo') {
+		         echo '<div id="error" style="color: red; margin: 10px 0; padding: 10px; background-color: #ffe6e6; border: 1px solid #ff9999; border-radius: 5px;">La foto debe ser JPG, PNG o GIF válido.</div>';
 		     }
 		 }
 		 ?>
 		 
 			<form id="nuevoAlumno"
 			action="controllers/nuevoAlumno.php" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="<?php echo generarTokenCSRF(); ?>">
 				<label for="nombreAlumno">Nombre:</label><br>
 			<input type="text"
 			id="nombreAlumno" name="nombreAlumno"><br>
@@ -33,6 +40,22 @@
 				<label for="emailAlumno">Email:</label><br>
 			<input type="email"
 			id="emailAlumno" name="emailAlumno"><br>
+				<label for="telefonoAlumno">Teléfono:</label><br>
+			<input type="text" id="telefonoAlumno" name="telefonoAlumno"><br>
+				<label for="direccionAlumno">Dirección:</label><br>
+			<input type="text" id="direccionAlumno" name="direccionAlumno"><br>
+				<label for="tutorAlumno">Tutor legal:</label><br>
+			<input type="text" id="tutorAlumno" name="tutorAlumno"><br>
+				<label for="contactoEmergenciaAlumno">Contacto de emergencia:</label><br>
+			<input type="text" id="contactoEmergenciaAlumno" name="contactoEmergenciaAlumno"><br>
+				<label for="centroAlumno">Centro escolar:</label><br>
+			<input type="text" id="centroAlumno" name="centroAlumno"><br>
+				<label for="cursoActualAlumno">Curso actual:</label><br>
+			<input type="text" id="cursoActualAlumno" name="cursoActualAlumno"><br>
+				<label for="fechaAltaAlumno">Fecha de alta:</label><br>
+			<input type="date" id="fechaAltaAlumno" name="fechaAltaAlumno" value="<?php echo date('Y-m-d'); ?>"><br>
+				<label for="observacionesAlumno">Observaciones:</label><br>
+			<textarea id="observacionesAlumno" name="observacionesAlumno"></textarea><br>
 				<label for="fotoAlumno">Foto (opcional):</label><br>
 			<input type="file"
 			id="fotoAlumno" name="fotoAlumno" accept="image/*"><br>

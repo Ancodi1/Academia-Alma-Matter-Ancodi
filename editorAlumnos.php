@@ -1,5 +1,6 @@
 <?php
 require("views/cabecera.php");
+requerirInterno();
 require_once("controllers/AlumnoController.php");
 require_once("models/csrf.php");
 
@@ -34,6 +35,11 @@ function mostrarBotonExamenesRealizados($id)
 function mostrarBotonEliminarAlumno($id)
 {
     echo '<button type="submit" name="eliminarAlumno"><i class="fa fa-trash" aria-hidden="true"></i></button>';
+}
+
+function mostrarBotonFichaAlumno($id)
+{
+    echo '<a class="btn-link" href="/fichaAlumno.php?id=' . intval($id) . '">Ficha</a>';
 }
 
 ?>
@@ -71,6 +77,8 @@ function mostrarBotonEliminarAlumno($id)
             <td id="filaAlumnos">Apellidos</td>
             <td id="filaAlumnos">Edad</td>
             <td id="filaAlumnos">Email</td>
+            <td id="filaAlumnos">Teléfono</td>
+            <td id="filaAlumnos">Curso</td>
             <td id="filaAlumnos">Acciones</td>
         </tr>
             <!-- Listamos a todos los Alumnos -->
@@ -86,8 +94,17 @@ function mostrarBotonEliminarAlumno($id)
                 echo '<td id="filaAlumnos"><input type="text" name="apellidos" value="' . htmlspecialchars($alumno["apellidos"]) . '" disabled></td>';
                 echo '<td id="filaAlumnos"><input type="text" name="edad" value="' . htmlspecialchars($alumno["edad"]) . '" disabled></td>';
                 echo '<td id="filaAlumnos"><input type="email" name="email" value="' . htmlspecialchars($alumno["email"] ?? '') . '" disabled></td>';
+                echo '<td id="filaAlumnos"><input type="text" name="telefono" value="' . htmlspecialchars($alumno["telefono"] ?? '') . '" disabled></td>';
+                echo '<td id="filaAlumnos"><input type="text" name="curso_actual" value="' . htmlspecialchars($alumno["curso_actual"] ?? '') . '" disabled></td>';
+                echo '<input type="hidden" name="direccion" value="' . htmlspecialchars($alumno["direccion"] ?? '') . '">';
+                echo '<input type="hidden" name="tutor" value="' . htmlspecialchars($alumno["tutor"] ?? '') . '">';
+                echo '<input type="hidden" name="contacto_emergencia" value="' . htmlspecialchars($alumno["contacto_emergencia"] ?? '') . '">';
+                echo '<input type="hidden" name="centro" value="' . htmlspecialchars($alumno["centro"] ?? '') . '">';
+                echo '<input type="hidden" name="fecha_alta" value="' . htmlspecialchars($alumno["fecha_alta"] ?? date('Y-m-d')) . '">';
+                echo '<input type="hidden" name="observaciones" value="' . htmlspecialchars($alumno["observaciones"] ?? '') . '">';
                 // Creamos los botones para las acciones
                 echo '<td id="filaAlumnos">';
+                mostrarBotonFichaAlumno($idAlumno);
                 // Acción Modificar Alumno
                 mostrarBotonModificar($idAlumno);
                 // Acción Realizar Examen
@@ -175,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function(){
 			var btnEditar = fila.querySelector('.btn-editar');
 			var btnGuardar = fila.querySelector('.btn-guardar');
 			var btnCancelar = fila.querySelector('.btn-cancelar');
-			var inputs = fila.querySelectorAll('input[type="text"]');
+			var inputs = fila.querySelectorAll('input[type="text"], input[type="email"]');
 
 			if (target.classList.contains('btn-editar')) {
 				inputs.forEach(function(inp){

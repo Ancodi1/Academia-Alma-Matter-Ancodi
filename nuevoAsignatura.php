@@ -1,8 +1,10 @@
 <?php require_once("views/cabecera.php"); ?>
+<?php requerirInterno(); ?>
+<?php require_once("models/csrf.php"); ?>
 
 		<!--Divisor del Contenido-->
 		<div id="contenido">
-		 <h1>Bienvenido a Alma Mater </h1>
+		 <h1>Bienvenido a Refuerzo Escolar </h1>
 		 <h2>Nueva Asignatura </h2>
 		 
 		 <?php
@@ -18,6 +20,7 @@
 		 
 			<form id="nuevaAsignatura"
 			action="controllers/nuevaAsignatura.php" method="post">
+            <input type="hidden" name="csrf_token" value="<?php echo generarTokenCSRF(); ?>">
 				<label for="nombreAsignatura">Nombre:</label><br>
 			<input type="text"
 			id="nombreAsignatura" name="nombreAsignatura"><br>

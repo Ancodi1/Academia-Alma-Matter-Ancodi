@@ -1,6 +1,8 @@
 <?php
 require("views/cabecera.php");
+requerirInterno();
 require_once("controllers/AlumnoController.php");
+require_once("models/csrf.php");
 
 $alumnoController = new AlumnoController();
 
@@ -17,6 +19,7 @@ $asignaturas = $alumnoController->getTodasLasAsignaturas();
     }
     ?>
 	<form action="controllers/realizarExamen.php" method="post">
+        <input type="hidden" name="csrf_token" value="<?php echo generarTokenCSRF(); ?>">
 		<input type="hidden" name="idAlumno" value="<?php echo $idAlumno; ?>">
 		<label>Asignatura</label><br>
 		<select name="idAsignatura">
@@ -34,5 +37,3 @@ $asignaturas = $alumnoController->getTodasLasAsignaturas();
 <?php require("views/pieDePagina.php"); ?>
 <script src="/js/asignaturas.js"></script>
 </html>
-
-
