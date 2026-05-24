@@ -1,30 +1,44 @@
 ---
-name: ✨ Solicitud de Feature
-about: Sugerir una idea para este proyecto
+name: Solicitud de mejora
+about: Proponer una funcionalidad o mejora del sistema
 title: '[FEATURE] '
 labels: enhancement
 assignees: ''
-
 ---
 
-**¿Tu solicitud de feature está relacionada con un problema? Por favor describe.**
-Una descripción clara y concisa de cuál es el problema. Ej. Siempre me frustra cuando [...]
+## Problema que resuelve
 
-**Describe la solución que te gustaría**
-Una descripción clara y concisa de lo que quieres que pase.
+Describe la necesidad o fricción actual.
 
-**Describe alternativas que has considerado**
-Una descripción clara y concisa de cualquier solución o feature alternativa que hayas considerado.
+## Propuesta
 
-**Contexto Adicional**
-Añade cualquier otro contexto o screenshots sobre la solicitud de feature aquí.
+Explica la solución que te gustaría ver.
 
-**¿Esta feature sería útil para otros usuarios?**
-- [ ] Sí, sería útil para muchos usuarios
-- [ ] No, es muy específica para mi caso de uso
-- [ ] No estoy seguro
+## Usuarios afectados
 
-**Prioridad**
-- [ ] Baja - Nice to have
-- [ ] Media - Mejoraría significativamente la experiencia
-- [ ] Alta - Esencial para el uso básico
+- [ ] Administración
+- [ ] Profesorado
+- [ ] Alumnado
+- [ ] Familias
+
+## Módulo relacionado
+
+Ejemplo: alumnos, asignaturas, matrículas, asistencia, horarios, pagos, tareas, portal, API, reportes.
+
+## Impacto esperado
+
+- [ ] Cambia interfaz
+- [ ] Cambia base de datos
+- [ ] Cambia permisos o roles
+- [ ] Cambia despliegue/configuración
+- [ ] Requiere documentación
+
+## Alternativas consideradas
+
+Describe otras opciones si las hay.
+
+## Prioridad
+
+- [ ] Baja
+- [ ] Media
+- [ ] Alta

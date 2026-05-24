@@ -1,203 +1,204 @@
-# 🎓 Refuerzo Escolar
+# Academia Alma Mater
 
-Sistema de gestión académica completo desarrollado en PHP con MySQL. Permite gestionar alumnos, asignaturas y exámenes de forma intuitiva y segura.
+Sistema de gestión académica para academias de refuerzo escolar, desarrollado en PHP y MySQL. La aplicación centraliza alumnos, asignaturas, matrículas, horarios, asistencia, exámenes, pagos, tareas, reportes y acceso diferenciado para equipo interno, alumnado y familias.
 
-## ✨ Características
+## Estado del proyecto
 
-- **Gestión de Alumnos**: CRUD completo con búsqueda y paginación
-- **Gestión de Exámenes**: Crear, editar y eliminar exámenes por alumno
-- **Gestión de Asignaturas**: Administrar materias y cursos
-- **Búsqueda Avanzada**: Buscar alumnos por nombre o apellidos
-- **Paginación**: Navegación eficiente en listados grandes
-- **Seguridad**: Tokens CSRF, validaciones robustas, protección XSS
-- **Responsive**: Diseño adaptable a móviles y tablets
-- **UX Moderna**: Toasts, modales, animaciones suaves
+El proyecto ya incluye autenticación, roles, panel operativo, portal para alumnos/familias, API JSON básica y despliegue con Docker. La documentación anterior describía varias de estas piezas como roadmap; este README refleja el estado actual del repositorio.
 
-## 🚀 Instalación
+## Funcionalidades principales
 
-### Requisitos
-- PHP 7.4 o superior
-- MySQL 5.7 o superior
-- Servidor web (Apache/Nginx)
+- Gestión de alumnos con ficha completa, datos de contacto, observaciones, búsqueda y paginación.
+- Gestión de asignaturas, cursos y matrículas activas por alumno.
+- Registro de exámenes y consulta de historial académico.
+- Control de asistencia individual y en bloque por asignatura y fecha.
+- Horarios semanales con aula, profesor y detección de solapamientos.
+- Gestión de profesores para horarios y filtros de calendario.
+- Pagos por alumno con estados pendiente, pagado y vencido.
+- Tareas por asignatura y seguimiento de entregas.
+- Archivos asociados a alumnos, con subida y descarga controlada.
+- Panel de control con resumen de alumnos, asignaturas, matrículas, clases del día y alertas.
+- Reportes con exportación CSV, Excel y vista imprimible para PDF.
+- Portal para alumnos y familias con datos académicos, asistencia, pagos y matrículas.
+- Administración de usuarios y roles.
+- Auditoría de acciones sensibles.
+- API JSON protegida por sesión.
+- Interfaz responsive con modo claro/oscuro y manifest PWA.
 
-### Pasos
+## Roles
 
-1. **Clonar el repositorio**
+- `admin`: acceso completo, incluyendo usuarios y auditoría.
+- `teacher`: acceso interno a la gestión académica y operativa.
+- `student`: acceso al portal vinculado a su alumno.
+- `family`: acceso al portal vinculado a un alumno.
+
+El usuario inicial de desarrollo se crea desde los scripts SQL:
+
+- Usuario: `admin`
+- Contraseña: `admin123`
+
+Cambia esta contraseña antes de usar el sistema en un entorno real.
+
+## Requisitos
+
+- PHP 7.4 o superior.
+- MySQL 5.7 o superior.
+- Extensiones PHP `mysqli` y `pdo_mysql`.
+- Composer, necesario para PHPMailer.
+- Apache o servidor compatible con PHP.
+- Docker y Docker Compose si se usa el entorno contenedorizado.
+
+## Puesta en marcha con Docker
+
 ```bash
-git clone https://github.com/tu-usuario/refuerzo-escolar.git
-cd refuerzo-escolar
+docker compose up -d --build
 ```
 
-2. **Configurar la base de datos**
-```bash
-# Importar la base de datos
-mysql -u root -p < almamater.sql
+Después abre:
 
-# Aplicar optimizaciones (opcional pero recomendado)
-mysql -u root -p < optimizaciones.sql
-```
-
-3. **Configurar conexión a BD**
-Editar `models/mysqlConnect.php` con tus credenciales:
-```php
-$this->server = "localhost";
-$this->user = "tu_usuario";
-$this->password = "tu_password";
-$this->database = "almamater";
-```
-
-4. **Configurar servidor web**
-- Apache: Asegurar que mod_rewrite esté habilitado
-
-### Despliegue con Docker
-
-1. **Instalar Docker y Docker Compose**
-
-2. **Ejecutar el proyecto**
-```bash
-docker-compose up -d
-```
-
-3. **Acceder**
 - Aplicación: http://localhost:8080
-- Base de datos: localhost:3306 (usuario: root, password: password)
+- MySQL: `localhost:3306`
+- Base de datos Docker: `academia`
+- Usuario MySQL: `root`
+- Contraseña MySQL: `password`
 
-### Configuración de Email
+El `docker-compose.yml` importa `almamater.sql` y aplica las actualizaciones SQL incluidas en el repositorio.
 
-1. Copiar `config.example.php` a `config.php`
-2. Configurar credenciales SMTP en `config.php`
-3. Instalar dependencias: `composer install`
-- Nginx: Configurar reglas de reescritura para URLs limpias
+Si necesitas reiniciar la base de datos desde cero:
 
-5. **Permisos de archivos**
 ```bash
-chmod 755 -R .
-chmod 644 *.php
+docker compose down -v
+docker compose up -d --build
 ```
 
-## 📁 Estructura del Proyecto
+## Instalación manual
 
-```
-academia/
-├── controllers/           # Controladores de la aplicación
-│   ├── AlumnoController.php
-│   ├── accionesAlumno.php
-│   ├── accionesExamen.php
-│   └── realizarExamen.php
-├── models/               # Modelos y conexión a BD
-│   ├── mysqlConnect.php
-│   ├── csrf.php
-│   └── pieDePagina.php
-├── views/                # Vistas reutilizables
-│   ├── cabecera.php
-│   └── pieDePagina.php
-├── css/                  # Estilos CSS
-├── js/                   # JavaScript
-├── img/                  # Imágenes y recursos
-├── academia.css          # Estilos principales
-├── editorAlumnos.php     # Gestión de alumnos
-├── gestionAsignaturas.php # Gestión de asignaturas
-├── realizarExamen.php    # Crear exámenes
-├── examenesRealizados.php # Ver exámenes
-├── almamater.sql         # Base de datos
-├── optimizaciones.sql    # Índices de rendimiento
-└── README.md
+1. Clona el repositorio:
+
+```bash
+git clone https://github.com/Ancodi1/Academia-Alma-Matter-Ancodi.git
+cd Academia-Alma-Matter-Ancodi
 ```
 
-## 🔧 Configuración
+2. Instala dependencias PHP:
 
-### Variables de Entorno
-Crear archivo `.env` (opcional):
+```bash
+composer install
+```
+
+3. Crea la base de datos:
+
+```sql
+CREATE DATABASE almamater CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+4. Importa la estructura y las actualizaciones:
+
+```bash
+mysql -u root -p almamater < almamater.sql
+mysql -u root -p almamater < database_schema_updates.sql
+mysql -u root -p almamater < database_priority_medium_updates.sql
+mysql -u root -p almamater < database_advanced_updates.sql
+mysql -u root -p almamater < database_review_fixes.sql
+```
+
+5. Configura la conexión. La aplicación lee estas variables de entorno:
+
 ```env
 DB_HOST=localhost
 DB_USER=root
-DB_PASS=
+DB_PASSWORD=
 DB_NAME=almamater
 ```
 
-### Personalización
-- **Logo**: Reemplazar `img/logo.png`
-- **Colores**: Modificar variables CSS en `academia.css`
-- **Título**: Cambiar en `views/cabecera.php`
+Si no existen, `models/mysqlConnect.php` usa valores locales por defecto.
 
-## 🛡️ Seguridad
+6. Opcionalmente copia la configuración de ejemplo:
 
-- ✅ **Tokens CSRF** en todos los formularios
-- ✅ **Validación de entrada** en servidor y cliente
-- ✅ **Escape de salida** para prevenir XSS
-- ✅ **Sentencias preparadas** contra inyección SQL
-- ✅ **Validación de tipos** y rangos de datos
-
-## 📊 Rendimiento
-
-- **Índices optimizados** para consultas frecuentes
-- **Paginación eficiente** en listados grandes
-- **Conexiones de BD** gestionadas automáticamente
-- **Caché de CSS/JS** con versionado
-
-## 🎨 Personalización
-
-### Cambiar Colores
-Editar `academia.css`:
-```css
-:root {
-    --color-primary: #0b66c3;
-    --color-success: #16a34a;
-    --color-error: #dc2626;
-}
+```bash
+cp config.example.php config.php
 ```
 
-### Añadir Campos
-1. Modificar tabla en BD
-2. Actualizar `AlumnoController.php`
-3. Añadir inputs en formularios
-4. Actualizar validaciones
+7. Asegura permisos de subida:
 
-## 🤝 Contribuir
+```bash
+chmod -R 755 uploads
+```
 
-1. Fork el proyecto
-2. Crear rama para feature (`git checkout -b feature/nueva-funcionalidad`)
-3. Commit cambios (`git commit -m 'Añadir nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Abrir Pull Request
+## Configuración de correo
 
-## 📝 Licencia
+El proyecto usa PHPMailer para avisos por email en acciones como asistencia y exámenes. Copia `config.example.php` a `config.php` y ajusta los valores SMTP:
 
-Este proyecto está bajo la Licencia MIT. Ver `LICENSE` para más detalles.
+```php
+define('MAIL_HOST', 'smtp.example.com');
+define('MAIL_PORT', 587);
+define('MAIL_USERNAME', 'usuario@example.com');
+define('MAIL_PASSWORD', 'password');
+define('MAIL_FROM', 'no-reply@example.com');
+```
 
-## 🐛 Reportar Bugs
+## API
 
-Si encuentras un bug, por favor:
-1. Verificar que no esté ya reportado
-2. Crear issue con descripción detallada
-3. Incluir pasos para reproducir
-4. Especificar versión de PHP/MySQL
+La API está en `api.php` y requiere una sesión iniciada. Recursos disponibles:
 
-## 📞 Soporte
+- `api.php?recurso=estado`
+- `api.php?recurso=alumnos`
+- `api.php?recurso=asignaturas`
+- `api.php?recurso=horarios`
+- `api.php?recurso=pagos`
+- `api.php?recurso=resumen`
 
-- **Documentación**: Ver este README
-- **Issues**: Usar GitHub Issues
-- **Discusiones**: GitHub Discussions
+Los usuarios internos pueden ver datos globales. Los usuarios `student` y `family` solo reciben información vinculada a su alumno.
 
-## 🚀 Roadmap
+## Estructura
 
-- [ ] Sistema de autenticación
-- [ ] Roles de usuario (admin/profesor)
-- [ ] Exportación a PDF/Excel
-- [ ] API REST
-- [ ] Dashboard con estadísticas
-- [ ] Notificaciones por email
-- [ ] Backup automático
+```text
+.
+├── controllers/          # Controladores y acciones POST
+├── models/               # Conexión, autenticación, CSRF, correo y auditoría
+├── views/                # Cabecera y pie reutilizables
+├── js/                   # JavaScript de pantallas concretas
+├── img/                  # Recursos visuales
+├── uploads/              # Archivos subidos de alumnos
+├── pruebas/              # Pruebas/manual checks existentes
+├── .github/              # Workflows e issue templates
+├── almamater.sql         # Base inicial
+├── database_*.sql        # Actualizaciones de esquema
+├── docker-compose.yml    # Entorno local completo
+├── Dockerfile            # Imagen PHP/Apache
+└── academia.css          # Estilos principales
+```
 
-## 📈 Changelog
+## Seguridad
 
-### v1.0.0
-- ✅ CRUD completo de alumnos y exámenes
-- ✅ Búsqueda y paginación
-- ✅ Seguridad CSRF y validaciones
-- ✅ Diseño responsive
-- ✅ Optimizaciones de rendimiento
+- Autenticación por sesión.
+- Roles y restricciones de acceso por pantalla.
+- Tokens CSRF en formularios sensibles.
+- Consultas preparadas en los módulos principales.
+- Escape de salida con `htmlspecialchars`.
+- Validación de archivos por extensión, MIME y tamaño.
+- Descarga de archivos limitada al directorio `uploads`.
+- Auditoría para pagos, tareas y módulos sensibles.
 
----
+## Desarrollo
 
-**Desarrollado con ❤️ para la comunidad educativa**
+Comprobación rápida de sintaxis PHP:
+
+```bash
+find . -name "*.php" -not -path "./vendor/*" -exec php -l {} \;
+```
+
+Prueba básica de conexión a base de datos:
+
+```bash
+php pruebas/pruebaBaseDatos.php
+```
+
+El workflow de GitHub Actions ejecuta lint de PHP, prepara MySQL y genera un artefacto de despliegue.
+
+## Documentación relacionada
+
+- [DEPLOYMENT.md](DEPLOYMENT.md): despliegue y operación.
+- [CONTRIBUTING.md](CONTRIBUTING.md): flujo de contribución.
+- [CHANGELOG.md](CHANGELOG.md): historial de cambios.
+- [LICENSE](LICENSE): licencia MIT.

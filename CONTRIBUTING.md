@@ -1,227 +1,130 @@
-# 🤝 Guía de Contribución
+# Guía de contribución
 
-¡Gracias por tu interés en contribuir a Refuerzo Escolar! Este documento te guiará en el proceso de contribución.
+Gracias por contribuir a Academia Alma Mater. Este proyecto es una aplicación PHP/MySQL clásica, con controladores en `controllers/`, utilidades en `models/`, vistas reutilizables en `views/` y páginas PHP en la raíz.
 
-## 🚀 Cómo Contribuir
+## Flujo recomendado
 
-### 1. Fork y Clone
+1. Crea una rama descriptiva:
+
 ```bash
-# Fork el repositorio en GitHub
-# Luego clona tu fork
-git clone https://github.com/tu-usuario/refuerzo-escolar.git
-cd refuerzo-escolar
+git checkout -b feature/nombre-corto
 ```
 
-### 2. Configurar el Entorno
+2. Levanta el entorno:
+
 ```bash
-# Crear rama para tu contribución
-git checkout -b feature/nombre-de-tu-feature
-
-# Configurar la base de datos
-mysql -u root -p < almamater.sql
-mysql -u root -p < optimizaciones.sql
+docker compose up -d --build
 ```
 
-### 3. Hacer Cambios
-- Sigue las convenciones de código existentes
-- Añade comentarios para código complejo
-- Actualiza la documentación si es necesario
-- Prueba tus cambios exhaustivamente
+3. Realiza cambios pequeños y verificables.
 
-### 4. Commit y Push
+4. Ejecuta comprobaciones antes de abrir PR:
+
 ```bash
-git add .
-git commit -m "feat: añadir nueva funcionalidad X"
-git push origin feature/nombre-de-tu-feature
+find . -name "*.php" -not -path "./vendor/*" -exec php -l {} \;
+php pruebas/pruebaBaseDatos.php
 ```
 
-### 5. Crear Pull Request
-- Ve a GitHub y crea un Pull Request
-- Describe claramente qué cambios has hecho
-- Menciona cualquier issue relacionado
+5. Sube la rama y abre Pull Request con contexto claro.
 
-## 📝 Convenciones de Código
+## Convenciones de código
 
-### PHP
-```php
-// Usar camelCase para variables
-$nombreAlumno = "Juan";
+- Mantén el estilo PHP existente del repositorio.
+- Usa nombres en español cuando el módulo ya los use.
+- Prefiere consultas preparadas con `preparar()` para entradas de usuario.
+- Valida y normaliza datos antes de guardar.
+- Escapa salida HTML con `htmlspecialchars`.
+- Añade `csrf_token` en formularios que modifican datos.
+- Protege acciones internas con `requerirInterno()` o `requerirAdmin()`.
+- No mezcles refactors grandes con cambios funcionales pequeños.
 
-// Usar PascalCase para clases
-class AlumnoController {
-    // Usar camelCase para métodos
-    public function getAlumnoPorId($id) {
-        // Comentarios en español
-        return $this->conexion->realizarConsultaSQL($sql);
-    }
-}
+## Base de datos
+
+La base inicial está en `almamater.sql`. Las evoluciones incrementales viven en:
+
+- `database_schema_updates.sql`
+- `database_priority_medium_updates.sql`
+- `database_advanced_updates.sql`
+- `database_review_fixes.sql`
+
+Cuando añadas tablas, columnas o índices:
+
+- Crea SQL idempotente siempre que sea posible.
+- Evita romper datos existentes.
+- Documenta el orden de aplicación si importa.
+- Actualiza `docker-compose.yml` si el nuevo SQL debe cargarse en entornos limpios.
+
+## Seguridad
+
+Antes de enviar cambios revisa:
+
+- Formularios con token CSRF.
+- Roles correctos en páginas y controladores.
+- Consultas preparadas para todo dato externo.
+- Validación de archivos por extensión, MIME y tamaño.
+- Rutas de descarga dentro de `uploads/`.
+- Ausencia de credenciales reales en commits.
+
+## Documentación
+
+Actualiza documentación cuando cambies:
+
+- Instalación o despliegue.
+- Variables de entorno.
+- Tablas o migraciones requeridas.
+- Roles y permisos.
+- Endpoints de API.
+- Flujo de usuario visible.
+
+Archivos principales:
+
+- `README.md`
+- `DEPLOYMENT.md`
+- `CHANGELOG.md`
+- `.github/ISSUE_TEMPLATE/*.md`
+
+## Pull Requests
+
+Incluye en la descripción:
+
+- Qué cambia.
+- Por qué cambia.
+- Cómo se probó.
+- Capturas si afecta a interfaz.
+- SQL necesario si aplica.
+
+Checklist:
+
+- [ ] Sintaxis PHP comprobada.
+- [ ] Base de datos actualizada o sin cambios de esquema.
+- [ ] Permisos y roles revisados.
+- [ ] Documentación actualizada si aplica.
+- [ ] No se incluyen credenciales ni datos privados.
+
+## Issues
+
+Para bugs, indica:
+
+- Ruta o pantalla afectada.
+- Rol usado.
+- Pasos para reproducir.
+- Resultado esperado y resultado real.
+- Versión de PHP y MySQL.
+- Logs relevantes si existen.
+
+Para mejoras, indica:
+
+- Problema que resuelve.
+- Usuarios afectados.
+- Comportamiento esperado.
+- Impacto en datos, permisos o despliegue.
+
+## Commits
+
+Usa mensajes cortos y descriptivos. Ejemplos:
+
+```text
+feat: añadir filtro de profesor al calendario
+fix: validar csrf en actualización de pagos
+docs: actualizar guía de despliegue docker
 ```
-
-### JavaScript
-```javascript
-// Usar camelCase para variables y funciones
-function mostrarToast(mensaje, tipo = 'success') {
-    const elemento = document.createElement('div');
-    // Comentarios en español
-    return elemento;
-}
-```
-
-### CSS
-```css
-/* Usar kebab-case para clases */
-.btn-editar {
-    /* Comentarios en español */
-    background: #0b66c3;
-}
-```
-
-## 🐛 Reportar Bugs
-
-### Antes de Reportar
-1. Verificar que no esté ya reportado
-2. Probar en la última versión
-3. Revisar la documentación
-
-### Información Necesaria
-- **Versión de PHP**: `php -v`
-- **Versión de MySQL**: `mysql --version`
-- **Navegador y versión**
-- **Pasos para reproducir**
-- **Comportamiento esperado vs actual**
-- **Screenshots si es relevante**
-
-### Template de Bug Report
-```markdown
-**Descripción del Bug**
-Descripción clara y concisa del problema.
-
-**Pasos para Reproducir**
-1. Ir a '...'
-2. Hacer clic en '...'
-3. Ver error
-
-**Comportamiento Esperado**
-Qué debería pasar.
-
-**Screenshots**
-Si aplica, añadir screenshots.
-
-**Información del Sistema**
-- PHP: x.x.x
-- MySQL: x.x.x
-- Navegador: x.x.x
-```
-
-## ✨ Sugerir Mejoras
-
-### Antes de Sugerir
-1. Revisar issues existentes
-2. Considerar si es realmente necesario
-3. Pensar en la implementación
-
-### Template de Feature Request
-```markdown
-**¿Es tu feature request relacionada con un problema?**
-Descripción clara del problema.
-
-**Describe la solución que te gustaría**
-Descripción clara de lo que quieres que pase.
-
-**Describe alternativas consideradas**
-Otras soluciones que has considerado.
-
-**Contexto adicional**
-Cualquier otro contexto sobre la feature request.
-```
-
-## 🔧 Tipos de Contribuciones
-
-### 🐛 Bug Fixes
-- Corregir errores existentes
-- Mejorar manejo de errores
-- Añadir validaciones faltantes
-
-### ✨ Nuevas Features
-- Nuevas funcionalidades
-- Mejoras de UX/UI
-- Optimizaciones de rendimiento
-
-### 📚 Documentación
-- Mejorar README
-- Añadir comentarios al código
-- Crear guías de usuario
-
-### 🧪 Testing
-- Añadir tests unitarios
-- Mejorar cobertura de tests
-- Documentar casos de prueba
-
-## 🏷️ Etiquetas de Issues
-
-- `bug`: Algo no funciona
-- `enhancement`: Nueva feature o mejora
-- `documentation`: Mejoras en documentación
-- `good first issue`: Bueno para principiantes
-- `help wanted`: Se necesita ayuda extra
-- `question`: Pregunta o discusión
-
-## 📋 Checklist para Pull Requests
-
-- [ ] Código sigue las convenciones del proyecto
-- [ ] Cambios están probados localmente
-- [ ] Documentación actualizada si es necesario
-- [ ] No hay conflictos con la rama principal
-- [ ] Commit messages son descriptivos
-- [ ] PR tiene una descripción clara
-
-## 🎯 Roadmap de Contribuciones
-
-### Fácil (Good First Issues)
-- Mejorar documentación
-- Añadir tests básicos
-- Corregir typos
-- Mejorar comentarios
-
-### Intermedio
-- Añadir nuevas validaciones
-- Mejorar UI/UX
-- Optimizar consultas SQL
-- Añadir logging
-
-### Avanzado
-- Sistema de autenticación
-- API REST
-- Dashboard con estadísticas
-- Tests de integración
-
-## 💬 Comunicación
-
-- **Issues**: Para bugs y feature requests
-- **Discussions**: Para preguntas generales
-- **Pull Requests**: Para código y documentación
-
-## 📜 Código de Conducta
-
-### Nuestros Compromisos
-- Ser respetuosos y inclusivos
-- Aceptar críticas constructivas
-- Priorizar el bienestar de la comunidad
-- Mostrar empatía hacia otros miembros
-
-### Comportamiento Esperado
-- Usar lenguaje acogedor e inclusivo
-- Respetar diferentes puntos de vista
-- Aceptar disculpas sinceras
-- Enfocarse en lo que es mejor para la comunidad
-
-## 🏆 Reconocimientos
-
-Los contribuidores serán reconocidos en:
-- README del proyecto
-- Release notes
-- Página de contribuidores (futuro)
-
----
-
-**¡Gracias por contribuir a hacer Refuerzo Escolar mejor para todos! 🎓**

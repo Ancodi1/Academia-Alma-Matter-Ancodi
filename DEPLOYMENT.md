@@ -1,182 +1,186 @@
-# 🚀 Guía de Despliegue
+# Guía de despliegue
 
-Esta guía te ayudará a desplegar Refuerzo Escolar en diferentes entornos.
+Esta guía cubre la puesta en marcha de Academia Alma Mater en local, Docker y servidor tradicional. Para producción, cambia credenciales por defecto, activa HTTPS y revisa permisos de subida.
 
-## 📋 Requisitos del Servidor
+## Requisitos
 
-### Mínimos
-- **PHP**: 7.4 o superior
-- **MySQL**: 5.7 o superior
-- **Memoria RAM**: 512MB
-- **Espacio en disco**: 100MB
-- **Servidor web**: Apache 2.4+ o Nginx 1.18+
+Mínimos:
 
-### Recomendados
-- **PHP**: 8.0 o superior
-- **MySQL**: 8.0 o superior
-- **Memoria RAM**: 1GB o más
-- **Espacio en disco**: 500MB o más
-- **Servidor web**: Apache 2.4+ con mod_rewrite o Nginx 1.18+
+- PHP 7.4 o superior.
+- MySQL 5.7 o superior.
+- Apache 2.4 o Nginx con soporte PHP.
+- Composer.
+- Extensiones PHP `mysqli`, `pdo_mysql` y `fileinfo`.
+- 512 MB de RAM.
+- 100 MB de disco, más espacio para `uploads/`.
 
-## 🌐 Despliegue en Servidor Compartido
+Recomendado:
 
-### 1. Preparar Archivos
+- PHP 8.1 o superior.
+- MySQL 8.0.
+- HTTPS obligatorio.
+- Usuario MySQL dedicado con permisos limitados.
+- Copias de seguridad programadas.
+
+## Despliegue con Docker
+
+El repositorio ya incluye `Dockerfile` y `docker-compose.yml`.
+
 ```bash
-# Comprimir archivos (excluyendo archivos innecesarios)
-zip -r academia.zip . -x "*.git*" "*.md" "tests/*" "cache/*" "logs/*"
+docker compose up -d --build
 ```
 
-### 2. Subir al Servidor
-- Subir archivos via FTP/SFTP
-- Extraer en el directorio público (public_html, www, etc.)
+Servicios:
 
-### 3. Configurar Base de Datos
+- Web: http://localhost:8080
+- MySQL: `localhost:3306`
+- Base de datos: `academia`
+- Usuario MySQL: `root`
+- Contraseña: `password`
+
+Variables configuradas para el contenedor web:
+
+```env
+DB_HOST=db
+DB_USER=root
+DB_PASSWORD=password
+DB_NAME=academia
+```
+
+El contenedor de base de datos importa automáticamente:
+
+1. `almamater.sql`
+2. `database_schema_updates.sql`
+3. `database_priority_medium_updates.sql`
+4. `database_advanced_updates.sql`
+5. `database_review_fixes.sql`
+
+Para reconstruir la base desde cero:
+
+```bash
+docker compose down -v
+docker compose up -d --build
+```
+
+## Despliegue manual en servidor
+
+1. Sube el proyecto al directorio público o clónalo en el servidor:
+
+```bash
+git clone https://github.com/Ancodi1/Academia-Alma-Matter-Ancodi.git
+```
+
+2. Instala dependencias:
+
+```bash
+composer install --no-dev --optimize-autoloader
+```
+
+3. Crea la base de datos:
+
 ```sql
--- Crear base de datos
 CREATE DATABASE almamater CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- Importar estructura y datos
-mysql -u usuario -p almamater < almamater.sql
-mysql -u usuario -p almamater < optimizaciones.sql
+CREATE USER 'academia_user'@'localhost' IDENTIFIED BY 'cambia-esta-password';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, DROP, CREATE ROUTINE, ALTER ROUTINE ON almamater.* TO 'academia_user'@'localhost';
+FLUSH PRIVILEGES;
 ```
 
-### 4. Configurar Conexión
-Editar `models/mysqlConnect.php`:
-```php
-$this->server = "localhost";
-$this->user = "tu_usuario_bd";
-$this->password = "tu_password_bd";
-$this->database = "almamater";
-```
+4. Importa la base:
 
-### 5. Configurar Permisos
 ```bash
-chmod 755 -R .
-chmod 644 *.php
-chmod 644 *.css
-chmod 644 *.js
+mysql -u academia_user -p almamater < almamater.sql
+mysql -u academia_user -p almamater < database_schema_updates.sql
+mysql -u academia_user -p almamater < database_priority_medium_updates.sql
+mysql -u academia_user -p almamater < database_advanced_updates.sql
+mysql -u academia_user -p almamater < database_review_fixes.sql
 ```
 
-## 🐳 Despliegue con Docker
+5. Configura variables de entorno o ajusta tu entorno PHP/Apache:
 
-### 1. Crear Dockerfile
-```dockerfile
-FROM php:8.0-apache
-
-# Instalar extensiones PHP
-RUN docker-php-ext-install mysqli pdo pdo_mysql
-
-# Copiar archivos
-COPY . /var/www/html/
-
-# Configurar Apache
-RUN a2enmod rewrite
-COPY .htaccess /var/www/html/
-
-# Configurar permisos
-RUN chown -R www-data:www-data /var/www/html
+```env
+DB_HOST=localhost
+DB_USER=academia_user
+DB_PASSWORD=cambia-esta-password
+DB_NAME=almamater
 ```
 
-### 2. Crear docker-compose.yml
-```yaml
-version: '3.8'
-services:
-  web:
-    build: .
-    ports:
-      - "80:80"
-    depends_on:
-      - db
-    environment:
-      - DB_HOST=db
-      - DB_USER=root
-      - DB_PASS=password
-      - DB_NAME=almamater
+6. Prepara permisos:
 
-  db:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: almamater
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./almamater.sql:/docker-entrypoint-initdb.d/almamater.sql
-      - ./optimizaciones.sql:/docker-entrypoint-initdb.d/optimizaciones.sql
-
-volumes:
-  mysql_data:
-```
-
-### 3. Desplegar
 ```bash
-docker-compose up -d
+chmod -R 755 uploads
+find . -type f -name "*.php" -exec chmod 644 {} \;
+find . -type f -name "*.css" -exec chmod 644 {} \;
+find . -type f -name "*.js" -exec chmod 644 {} \;
 ```
 
-## ☁️ Despliegue en la Nube
+7. Inicia sesión con `admin` / `admin123` y cambia la contraseña inmediatamente desde la gestión de usuarios.
 
-### Heroku
+## Apache
+
+Configura el `DocumentRoot` apuntando al directorio del proyecto. Si el proyecto queda en la raíz del virtual host, las rutas absolutas usadas por la aplicación funcionarán directamente.
+
+Ejemplo orientativo:
+
+```apache
+<VirtualHost *:80>
+    ServerName academia.example.com
+    DocumentRoot /var/www/academia
+
+    <Directory /var/www/academia>
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
+
+Activa módulos habituales:
+
 ```bash
-# Instalar Heroku CLI
-# Crear Procfile
-echo "web: vendor/bin/heroku-php-apache2" > Procfile
+sudo a2enmod rewrite headers
+sudo systemctl reload apache2
+```
 
-# Crear app.json
-cat > app.json << EOF
-{
-  "name": "refuerzo-escolar",
-  "description": "Sistema de gestión académica",
-  "keywords": ["php", "mysql", "academia"],
-  "website": "https://tu-app.herokuapp.com",
-  "repository": "https://github.com/tu-usuario/refuerzo-escolar",
-  "success_url": "/",
-  "env": {
-    "DB_HOST": {
-      "description": "Host de la base de datos",
-      "value": "localhost"
+## Nginx
+
+Ejemplo orientativo con PHP-FPM:
+
+```nginx
+server {
+    listen 80;
+    server_name academia.example.com;
+    root /var/www/academia;
+    index index.php;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
     }
-  },
-  "addons": [
-    "cleardb:ignite"
-  ]
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+    }
+
+    location ~ /\. {
+        deny all;
+    }
 }
-EOF
-
-# Desplegar
-git add .
-git commit -m "Deploy to Heroku"
-git push heroku main
 ```
 
-### DigitalOcean App Platform
-1. Conectar repositorio GitHub
-2. Configurar variables de entorno
-3. Seleccionar stack PHP
-4. Configurar base de datos MySQL
+## Configuración de producción
 
-### AWS EC2
-```bash
-# Instalar LAMP stack
-sudo apt update
-sudo apt install apache2 mysql-server php php-mysql
+En producción:
 
-# Clonar repositorio
-git clone https://github.com/tu-usuario/refuerzo-escolar.git
-sudo mv refuerzo-escolar /var/www/html/
+- Usa HTTPS.
+- Cambia la contraseña `admin123`.
+- Usa un usuario MySQL dedicado.
+- Desactiva `DEBUG_MODE` y `SHOW_ERRORS` en `config.php`.
+- Revisa `upload_max_filesize` y `post_max_size`.
+- Protege backups, logs y archivos `.sql` si quedan dentro del directorio público.
+- Excluye `config.php`, `.env`, `vendor/` generado y `uploads/` sensibles de commits.
 
-# Configurar Apache
-sudo a2enmod rewrite
-sudo systemctl restart apache2
+Ejemplo de `php.ini`:
 
-# Configurar MySQL
-sudo mysql_secure_installation
-mysql -u root -p < /var/www/html/almamater.sql
-```
-
-## 🔧 Configuración de Producción
-
-### 1. Configurar PHP
 ```ini
-; php.ini
 display_errors = Off
 log_errors = On
 error_log = /var/log/php_errors.log
@@ -186,108 +190,42 @@ upload_max_filesize = 10M
 post_max_size = 10M
 ```
 
-### 2. Configurar Apache
-```apache
-# .htaccess
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php [QSA,L]
+## Correo SMTP
 
-# Seguridad
-Header always set X-Content-Type-Options nosniff
-Header always set X-Frame-Options DENY
-Header always set X-XSS-Protection "1; mode=block"
-Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-```
+El sistema puede enviar avisos con PHPMailer. Configura `config.php` a partir de `config.example.php`:
 
-### 3. Configurar MySQL
-```sql
--- Crear usuario específico
-CREATE USER 'academia_user'@'localhost' IDENTIFIED BY 'password_seguro';
-GRANT SELECT, INSERT, UPDATE, DELETE ON almamater.* TO 'academia_user'@'localhost';
-FLUSH PRIVILEGES;
-```
-
-### 4. Configurar SSL
-```bash
-# Con Let's Encrypt
-sudo apt install certbot python3-certbot-apache
-sudo certbot --apache -d tu-dominio.com
-```
-
-## 📊 Monitoreo y Mantenimiento
-
-### 1. Logs
-```bash
-# Ver logs de Apache
-tail -f /var/log/apache2/error.log
-
-# Ver logs de PHP
-tail -f /var/log/php_errors.log
-
-# Ver logs de MySQL
-tail -f /var/log/mysql/error.log
-```
-
-### 2. Backup
-```bash
-#!/bin/bash
-# backup.sh
-DATE=$(date +%Y%m%d_%H%M%S)
-mysqldump -u root -p almamater > backup_$DATE.sql
-tar -czf backup_$DATE.tar.gz /var/www/html/
-```
-
-### 3. Actualizaciones
-```bash
-# Actualizar aplicación
-git pull origin main
-composer install --no-dev --optimize-autoloader
-
-# Actualizar base de datos si es necesario
-mysql -u root -p almamater < updates.sql
-```
-
-## 🚨 Solución de Problemas
-
-### Error de Conexión a BD
 ```php
-// Verificar conexión
-$mysqli = new mysqli("localhost", "usuario", "password", "almamater");
-if ($mysqli->connect_error) {
-    die("Error: " . $mysqli->connect_error);
-}
+define('MAIL_HOST', 'smtp.example.com');
+define('MAIL_PORT', 587);
+define('MAIL_USERNAME', 'usuario@example.com');
+define('MAIL_PASSWORD', 'password');
+define('MAIL_ENCRYPTION', 'tls');
+define('MAIL_FROM', 'no-reply@example.com');
+define('MAIL_FROM_NAME', 'Academia Alma Mater');
 ```
 
-### Error 500
-- Verificar logs de Apache/PHP
-- Verificar permisos de archivos
-- Verificar sintaxis PHP
+## Backups
 
-### Error de Permisos
+Base de datos:
+
 ```bash
-sudo chown -R www-data:www-data /var/www/html/
-sudo chmod -R 755 /var/www/html/
+mysqldump -u academia_user -p almamater > backup_$(date +%Y%m%d_%H%M%S).sql
 ```
 
-## 🔒 Seguridad en Producción
+Archivos subidos:
 
-1. **Cambiar credenciales por defecto**
-2. **Configurar firewall**
-3. **Usar HTTPS**
-4. **Actualizar regularmente**
-5. **Monitorear logs**
-6. **Hacer backups regulares**
+```bash
+tar -czf uploads_$(date +%Y%m%d_%H%M%S).tar.gz uploads/
+```
 
-## 📈 Optimización
+Restaura primero la base y después `uploads/` para mantener referencias de archivos consistentes.
 
-1. **Habilitar caché de PHP**
-2. **Configurar compresión gzip**
-3. **Optimizar imágenes**
-4. **Usar CDN para archivos estáticos**
-5. **Configurar índices de BD**
+## Verificación posterior
 
----
-
-**¡Tu aplicación está lista para producción! 🎉**
+- Abrir `/login.php`.
+- Entrar como administrador.
+- Confirmar que `/index.php` carga métricas del panel.
+- Crear o editar un alumno de prueba.
+- Subir un archivo pequeño en la ficha del alumno.
+- Registrar asistencia y revisar reportes.
+- Probar `/api.php?recurso=estado` con sesión iniciada.

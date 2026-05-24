@@ -1,93 +1,80 @@
-# 📝 Changelog
+# Changelog
 
-Todos los cambios notables de este proyecto serán documentados en este archivo.
+Todos los cambios notables del proyecto se documentan en este archivo.
 
-El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
-y este proyecto adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+El formato sigue la idea de Keep a Changelog y el proyecto usa versionado semántico de forma orientativa.
+
+## [1.1.0] - 2026-05-24
+
+### Añadido
+
+- Panel de control con métricas, clases del día, ausencias recientes y alumnos que requieren seguimiento.
+- Autenticación con roles `admin`, `teacher`, `student` y `family`.
+- Portal para alumnado y familias vinculado a un alumno.
+- Gestión de usuarios y restablecimiento de contraseñas desde administración.
+- Matrículas entre alumnos y asignaturas.
+- Control de asistencia individual y en bloque.
+- Calendario semanal y gestión de horarios con profesor y aula.
+- Gestión de profesores.
+- Gestión de pagos y estados de cobro.
+- Tareas por asignatura y seguimiento de entregas.
+- Subida, descarga y eliminación de archivos de alumno.
+- Auditoría de acciones sensibles.
+- Reportes académicos y de asistencia con exportación CSV, Excel y vista imprimible.
+- API JSON protegida por sesión.
+- Modo claro/oscuro y manifest PWA.
+- Scripts SQL incrementales para nuevas tablas, columnas, índices y revisiones.
+- Dockerfile y Docker Compose para entorno local completo.
+
+### Cambiado
+
+- README, guía de despliegue y guía de contribución actualizados al estado real del proyecto.
+- Conexión de base de datos preparada para variables de entorno.
+- Navegación reorganizada por módulos operativos.
+- Flujo de acceso separado entre usuarios internos y portal.
+
+### Seguridad
+
+- Restricción de pantallas por rol.
+- CSRF aplicado en acciones de escritura.
+- Validación de archivos por extensión, MIME y tamaño.
+- Descarga de archivos limitada al directorio `uploads`.
+- Uso extendido de consultas preparadas en módulos con entrada de usuario.
 
 ## [1.0.0] - 2024-12-19
 
-### ✨ Añadido
-- Sistema completo de gestión de alumnos con CRUD
-- Gestión de exámenes por alumno (crear, editar, eliminar)
-- Gestión de asignaturas y cursos
-- Sistema de búsqueda con filtros por nombre y apellidos
-- Paginación eficiente en todos los listados
-- Sistema de seguridad con tokens CSRF
-- Validaciones robustas en servidor y cliente
-- Interfaz responsive para móviles y tablets
-- Sistema de notificaciones con toasts
-- Modales de confirmación para acciones importantes
-- Protección contra XSS e inyección SQL
-- Optimizaciones de rendimiento con índices de BD
-- Manejo automático de conexiones de base de datos
-- Logging de errores para debugging
-- Documentación completa con README y guías
+### Añadido
 
-### 🔧 Cambiado
-- Migración de consultas SQL a sentencias preparadas
-- Mejora del diseño visual con colores modernos
-- Optimización de consultas de base de datos
-- Refactorización del código JavaScript para mejor rendimiento
-- Mejora de la accesibilidad con focus visible
-- Actualización de la estructura de archivos
+- Gestión inicial de alumnos con CRUD.
+- Gestión de exámenes por alumno.
+- Gestión de asignaturas y cursos.
+- Búsqueda por nombre y apellidos.
+- Paginación en listados.
+- Validaciones en servidor y cliente.
+- Interfaz responsive.
+- Notificaciones con toasts.
+- Modales de confirmación.
+- Optimizaciones de rendimiento con índices de base de datos.
+- Documentación inicial.
 
-### 🐛 Corregido
-- Error de paginación en listados de alumnos
-- Vulnerabilidades XSS en formularios
-- Memory leaks en JavaScript
-- Manejo de errores de conexión a base de datos
-- Validaciones faltantes en formularios
-- Problemas de responsive en móviles
+### Cambiado
 
-### 🔒 Seguridad
-- Implementación de tokens CSRF en todos los formularios
-- Escape de salida para prevenir XSS
-- Validación de entrada en servidor y cliente
-- Sentencias preparadas contra inyección SQL
-- Validación de tipos y rangos de datos
-- Sanitización de parámetros GET y POST
+- Migración progresiva hacia consultas preparadas.
+- Mejora visual de formularios y listados.
+- Reorganización inicial de controladores, modelos y vistas.
 
-### 📊 Rendimiento
-- Índices optimizados para consultas frecuentes
-- Paginación eficiente para listados grandes
-- Gestión automática de conexiones de BD
-- Optimización de consultas SQL
-- Mejora del rendimiento de JavaScript
-- Caché de archivos CSS/JS con versionado
+### Corregido
 
-### 📚 Documentación
-- README completo con instrucciones de instalación
-- Guía de contribución detallada
-- Changelog para seguimiento de versiones
-- Comentarios en código para mejor mantenibilidad
-- Archivo de optimizaciones SQL
-- Licencia MIT para uso libre
+- Problemas de paginación en listados.
+- Escapes de salida en formularios.
+- Validaciones faltantes.
+- Manejo de errores de conexión a base de datos.
 
 ## [0.9.0] - 2024-12-18
 
-### ✨ Añadido
-- Estructura básica del proyecto
-- Conexión a base de datos MySQL
-- Formularios básicos de gestión
-- Estilos CSS iniciales
+### Añadido
 
-### 🔧 Cambiado
-- Migración de PHP procedural a orientado a objetos
-- Mejora de la estructura de archivos
-
-### 🐛 Corregido
-- Problemas de conexión a base de datos
-- Errores de sintaxis en PHP
-
----
-
-## Tipos de Cambios
-
-- `✨ Añadido` para nuevas funcionalidades
-- `🔧 Cambiado` para cambios en funcionalidades existentes
-- `🐛 Corregido` para corrección de bugs
-- `🔒 Seguridad` para mejoras de seguridad
-- `📊 Rendimiento` para optimizaciones
-- `📚 Documentación` para cambios en documentación
-- `🗑️ Eliminado` para funcionalidades eliminadas
+- Estructura básica del proyecto.
+- Conexión a MySQL.
+- Formularios iniciales de gestión.
+- Estilos CSS base.
